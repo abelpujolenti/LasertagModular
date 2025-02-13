@@ -3,16 +3,16 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 
-LasertagModular/Assets/StreamingAssets/Json/Save
-
-LasertagModular/[Ll]ibrary/
-LasertagModular/[Tt]emp/
-LasertagModular/[Oo]bj/
-LasertagModular/[Bb]uild/
-LasertagModular/[Bb]uilds/
-LasertagModular/[Ll]ogs/
-LasertagModular/[Uu]ser[Ss]ettings/
-LasertagModular/[Aa]ssets/[Ss]treamingAssets/[Jj]son/[Mm]ail
+Lasertag Modular/Assets/StreamingAssets/Json/Save
+ 
+Lasertag Modular/[Ll]ibrary/
+Lasertag Modular/[Tt]emp/
+Lasertag Modular/[Oo]bj/
+Lasertag Modular/[Bb]uild/
+Lasertag Modular/[Bb]uilds/
+Lasertag Modular/[Ll]ogs/
+Lasertag Modular/[Uu]ser[Ss]ettings/
+Lasertag Modular/[Aa]ssets/[Ss]treamingAssets/[Jj]son/[Mm]ail
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
