@@ -11,25 +11,25 @@ public class ClientConnection : MonoBehaviour
 
     async void Start()
     {
-        await ConnectToServer("127.0.0.1", 8080);
+
+        string serverIP = "10.40.1.53";
+        int port = 8080;
+
+        Debug.Log($"Attempting to connect to {serverIP}:{port}...");
+
+        await ConnectToServer(serverIP, port);
     }
 
     async Task ConnectToServer(string ip, int port)
     {
-        try
-        {
 
+        await Task.Delay(TimeSpan.FromSeconds(3));
 
-            client = new TcpClient();
-            await client.ConnectAsync(ip, port);
-            isConnected = true;
+        client = new TcpClient();
+        await client.ConnectAsync(ip, port);
+        isConnected = true;
 
-            Debug.Log("Connected to server!");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Connection failed: {e.Message}");
-        }
+        Debug.Log("Connected to server!");
     }
 
 

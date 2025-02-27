@@ -40,6 +40,7 @@ class ServerConnection : MonoBehaviour
 
     private void LookForClients() 
     {
+        Debug.Log("Looking");
 
         while (isRunningClientThread)
         {
