@@ -6,12 +6,13 @@ using System.Threading;
 //
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
+using Socket = System.Net.Sockets.Socket;
 
 namespace Network.Sockets
 {
     public class TcpSocket
     {
-        private Socket _socket = new(SocketType.Stream, ProtocolType.Tcp);
+        private Socket _socket;
 
         private Mutex _subscriptionsMutex = new Mutex();
         private Mutex _socketDisconnectionMutex = new Mutex();
@@ -20,11 +21,19 @@ namespace Network.Sockets
 
         private List<OnSocketDisconnect> _disconnectionSubscriptions = new List<OnSocketDisconnect>();
 
+        public TcpSocket()
+        {
+            _socket = new(SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        public TcpSocket(Socket socket)
+        {
+            _socket = socket;
+        }
+
         public bool Connect(IPEndPoint ipEndPoint)
         {
             _socket.Connect(ipEndPoint);
-            
-            _socket.Shutdown(SocketShutdown.Both);
 
             return _socket.Connected;
         }
@@ -89,6 +98,11 @@ namespace Network.Sockets
             _disconnectionSubscriptions.Add(onSocketDisconnectAction);
             
             _socketDisconnectionMutex.ReleaseMutex();
+        }
+
+        public bool HasDataToRead()
+        {
+            return _socket.Available != 0;
         }
 
         private void ProcessPacket(byte[] data)
