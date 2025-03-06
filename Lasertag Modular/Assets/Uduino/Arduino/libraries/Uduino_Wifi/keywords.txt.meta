@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7f4514175979789488f96a2aa1110436
+timeCreated: 1541968448
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 134187
+  packageName: 'Uduino Plugin: Wifi for esp8266 and esp32'
+  packageVersion: 3.5.0
+  assetPath: Assets/Uduino/Arduino/libraries/Uduino_Wifi/keywords.txt
+  uploadId: 485550

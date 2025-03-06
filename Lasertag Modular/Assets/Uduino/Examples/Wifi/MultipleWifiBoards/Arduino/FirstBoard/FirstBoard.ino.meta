@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1958d574ea6376643a4e3adaaefeb5c5
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 134187
+  packageName: 'Uduino Plugin: Wifi for esp8266 and esp32'
+  packageVersion: 3.5.0
+  assetPath: Assets/Uduino/Examples/Wifi/MultipleWifiBoards/Arduino/FirstBoard/FirstBoard.ino
+  uploadId: 485550
