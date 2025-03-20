@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-//
+
+//typedefs
 using OnSocketConnected = System.Action<Network.Sockets.TcpSocket>;
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
@@ -33,7 +34,7 @@ namespace Network.Sockets
         {
         }
 
-        private void StartLoop()
+        public void StartLoop()
         {
             if (_isRunning)
             {
