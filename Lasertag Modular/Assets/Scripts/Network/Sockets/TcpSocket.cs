@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading;
 using Stream;
-
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
@@ -160,6 +159,16 @@ namespace Network.Sockets
             _subscriptions[key](data);
             
             _subscriptionsMutex.ReleaseMutex();
+        }
+
+        public EndPoint GetLocalAddress()
+        {
+            return _socket.LocalEndPoint;
+        }
+
+        public EndPoint GetRemoteAddress()
+        {
+            return _socket.RemoteEndPoint;
         }
     }
 }

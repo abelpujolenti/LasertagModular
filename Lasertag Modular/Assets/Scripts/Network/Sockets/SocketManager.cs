@@ -1,12 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
-
 //typedefs
 using OnSocketConnected = System.Action<Network.Sockets.TcpSocket>;
-using OnReceivePacket = System.Action<byte[]>;
-using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
 
 namespace Network.Sockets
 {
@@ -22,6 +19,8 @@ namespace Network.Sockets
         private OnSocketConnected _onSocketConnected;
 
         private List<TcpSocket> _sockets = new List<TcpSocket>();
+
+        private IPEndPoint _ipEndPoint;
 
         private bool _isRunning;
 
@@ -47,7 +46,7 @@ namespace Network.Sockets
             loopThread.Start();
         }
 
-        public bool StartListener(IPEndPoint ipEndPoint)
+        public bool StartListener(int port)
         {
             _listenerMutex.WaitOne();
 
@@ -57,7 +56,7 @@ namespace Network.Sockets
                 return false;
             }
 
-            _listener = new MyTcpListener(ipEndPoint);
+            _listener = new MyTcpListener(port);
             
             _listener.Start();
 
@@ -80,15 +79,19 @@ namespace Network.Sockets
 
         public bool ConnectToNetEntity(IPEndPoint ipEndPoint)
         {
+            _listenerMutex.WaitOne();
+            
             TcpSocket newSocket = new TcpSocket();
 
             if (!newSocket.Connect(ipEndPoint))
             {
+                _listenerMutex.ReleaseMutex();
                 return false;
             }
             
             AddSocket(newSocket);
 
+            _listenerMutex.ReleaseMutex();
             return true;
         }
 
@@ -149,7 +152,7 @@ namespace Network.Sockets
             _socketsMutex.ReleaseMutex();
         }
 
-        public void RemoveSocketAsync(TcpSocket socket)
+        private void RemoveSocketAsync(TcpSocket socket)
         {
             Thread removeSocketThread = new Thread(() =>
             {
@@ -157,6 +160,25 @@ namespace Network.Sockets
             });
             
             removeSocketThread.Start();
+        }
+
+        public void GetSockets(Action<List<TcpSocket>> action)
+        {
+            _socketsMutex.WaitOne();
+
+            action(_sockets);
+            
+            _socketsMutex.ReleaseMutex();
+        }
+
+        public void GetSocketsAsync(Action<List<TcpSocket>> action)
+        {
+            Thread getSocketsThread = new Thread(() =>
+            {
+                GetSockets(action);
+            });
+            
+            getSocketsThread.Start();
         }
     }
 }
