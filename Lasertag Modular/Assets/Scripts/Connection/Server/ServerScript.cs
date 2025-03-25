@@ -45,7 +45,7 @@ class ServerConnection : MonoBehaviour
         while (isRunningClientThread)
         {
             TcpClient client = server.AcceptTcpClient();
-            Console.WriteLine("Client connected!");
+            Debug.Log("Client connected!");
 
         }
 
