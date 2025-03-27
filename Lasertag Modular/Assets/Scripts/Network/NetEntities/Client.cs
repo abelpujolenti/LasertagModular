@@ -45,7 +45,7 @@ namespace Network.NetEntities
 
             Action<List<TcpSocket>> action = (sockets) =>
             {
-                if (!_serverSocketManager.StartListener(_portToListen))
+                if (!_serverSocketManager.StartListener(ipEndPoint.Address, _portToListen))
                 {
                     return;
                 }

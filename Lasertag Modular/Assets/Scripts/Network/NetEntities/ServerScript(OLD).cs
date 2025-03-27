@@ -25,8 +25,6 @@ class ServerConnection : MonoBehaviour
     private void StartServer()
     {
         IPAddress ipAddress = GetLocalIPAddress();
-
-        //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
         int port = FindAvailablePort(8050, 100);
         server = new TcpListener(ipAddress, port);
 

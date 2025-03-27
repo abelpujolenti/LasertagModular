@@ -46,7 +46,7 @@ namespace Network.Sockets
             loopThread.Start();
         }
 
-        public bool StartListener(int port)
+        public bool StartListener(IPAddress ipAddress, int port)
         {
             _listenerMutex.WaitOne();
 
@@ -56,7 +56,7 @@ namespace Network.Sockets
                 return false;
             }
 
-            _listener = new MyTcpListener(port);
+            _listener = new MyTcpListener(ipAddress, port);
             
             _listener.Start();
 
