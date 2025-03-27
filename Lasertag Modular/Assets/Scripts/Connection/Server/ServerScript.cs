@@ -5,6 +5,7 @@ using System.Threading;
 using System.Net.NetworkInformation;
 using System;
 using UnityEngine;
+using System.Threading.Tasks;
 
 class ServerConnection : MonoBehaviour
 {
@@ -13,7 +14,7 @@ class ServerConnection : MonoBehaviour
     private Thread acceptClientsThread;
     bool isRunningClientThread = true;
 
-    public void Start()
+    private void Start()
     {
         Debug.Log("START");
 
@@ -28,6 +29,10 @@ class ServerConnection : MonoBehaviour
         //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
         int port = FindAvailablePort(8050, 100);
         server = new TcpListener(ipAddress, port);
+
+        server.Start();
+
+        Debug.Log($"Server started on ip {ipAddress.ToString()}, on port {port})");
 
         acceptClientsThread = new Thread(LookForClients);
 
@@ -67,7 +72,7 @@ class ServerConnection : MonoBehaviour
         throw new Exception("No network adapters with a valid IPv4 address found.");
     }
 
-    private int FindAvailablePort(int startPort, int maxAttempts)
+    public int FindAvailablePort(int startPort, int maxAttempts)
     {
         for (int i = 0; i < maxAttempts; i++)
         {
@@ -78,6 +83,7 @@ class ServerConnection : MonoBehaviour
             }
         }
         return -1; // No available port found
+
     }
 
     private bool IsPortAvailable(int port)
