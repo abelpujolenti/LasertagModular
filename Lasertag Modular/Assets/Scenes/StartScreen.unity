@@ -813,6 +813,7 @@ GameObject:
   - component: {fileID: 647882630}
   - component: {fileID: 647882629}
   - component: {fileID: 647882632}
+  - component: {fileID: 647882633}
   m_Layer: 5
   m_Name: ServerButton
   m_TagString: Untagged
@@ -947,6 +948,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneName: ServerScreen
+--- !u!114 &647882633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647882627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e31f8bf275a244349d83a1378de49c3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _portToListen: 3000
 --- !u!1 &650311454
 GameObject:
   m_ObjectHideFlags: 0
@@ -1725,7 +1739,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1594009895}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Script: {fileID: 11500000, guid: ad2fe994f1c84a3eb6ef463e10843f3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1813001214
