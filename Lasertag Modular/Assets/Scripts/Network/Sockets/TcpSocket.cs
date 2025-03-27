@@ -62,7 +62,6 @@ namespace Network.Sockets
             
             byte[] data = new byte[keyDataLength + objectDataLength];
             
-            
             for (int i = 0; i < keyDataLength; i++)
             {
                 Buffer.SetByte(data, i, arr1[i]);
@@ -70,7 +69,7 @@ namespace Network.Sockets
 
             for (int i = 0; i < objectDataLength; i++)
             {
-                Buffer.SetByte(data, i, arr2[i]);
+                Buffer.SetByte(data, i + keyDataLength, arr2[i]);
             }
 
             return data;

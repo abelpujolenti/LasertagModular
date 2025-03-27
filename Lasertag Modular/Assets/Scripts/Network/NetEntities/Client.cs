@@ -54,7 +54,7 @@ namespace Network.NetEntities
                 {
                     _socketWithServer = socket;
             
-                    _socketWithServer.Subscribe(1, (bits) =>
+                    _socketWithServer.Subscribe(0, (bits) =>
                     {
                         Test a = bits.ByteArrayToObjectT<Test>();
                         Debug.Log(a.sos);
