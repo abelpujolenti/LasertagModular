@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading;
 using Stream;
+
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
@@ -46,7 +47,6 @@ namespace Network.Sockets
         }
 
         public void SendPacket<T>(uint key, T obj)
-            where T : ISerializable
         {
             byte[] keyData = BitConverter.GetBytes(key);
 

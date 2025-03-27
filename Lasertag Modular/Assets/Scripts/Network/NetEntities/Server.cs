@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using Network.Sockets;
 using UnityEngine;
 
@@ -20,6 +21,15 @@ namespace Network.NetEntities
                 {
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
+                
+                Thread.Sleep(1000);
+                
+                socket.SendPacket(1, new Test
+                {
+                    sos ="sos", 
+                    puto = 5
+                });
+                
             });
             
             var host = Dns.GetHostEntry(Dns.GetHostName());

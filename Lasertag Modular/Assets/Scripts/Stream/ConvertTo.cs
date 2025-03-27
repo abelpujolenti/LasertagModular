@@ -21,5 +21,11 @@ namespace Stream
             string json = Encoding.UTF8.GetString(data);
             return JsonUtility.FromJson<T>(json);
         }
+        
+        public static T ByteArrayToObjectT<T>(this byte[] data)
+        {
+            string json = Encoding.UTF8.GetString(data);
+            return JsonUtility.FromJson<T>(json);
+        }
     }
 }

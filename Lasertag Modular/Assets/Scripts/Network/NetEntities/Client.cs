@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using Network.Sockets;
+using Stream;
 using UnityEngine;
 //typdef
+using OnReceivePacket = System.Action<byte[]>;
 
 namespace Network.NetEntities
 {
@@ -36,7 +38,7 @@ namespace Network.NetEntities
 
         private void ConnectToServer(IPEndPoint ipEndPoint)
         {
-            if (_serverSocketManager.ConnectToNetEntity(ipEndPoint))
+            if (!_serverSocketManager.ConnectToNetEntity(ipEndPoint))
             {
                 return;
             }
@@ -51,6 +53,12 @@ namespace Network.NetEntities
                 foreach (TcpSocket socket in sockets)
                 {
                     _socketWithServer = socket;
+            
+                    _socketWithServer.Subscribe(1, (bits) =>
+                    {
+                        Test a = bits.ByteArrayToObjectT<Test>();
+                        Debug.Log(a.sos);
+                    });
                 }
                     
                 _serverSocketManager.StartLoop();
