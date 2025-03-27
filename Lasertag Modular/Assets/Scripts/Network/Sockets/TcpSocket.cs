@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading;
 using Stream;
-
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
@@ -62,6 +61,7 @@ namespace Network.Sockets
             
             byte[] data = new byte[keyDataLength + objectDataLength];
             
+            
             for (int i = 0; i < keyDataLength; i++)
             {
                 Buffer.SetByte(data, i, arr1[i]);
@@ -69,7 +69,7 @@ namespace Network.Sockets
 
             for (int i = 0; i < objectDataLength; i++)
             {
-                Buffer.SetByte(data, i + keyDataLength, arr2[i]);
+                Buffer.SetByte(data, i, arr2[i]);
             }
 
             return data;
@@ -77,7 +77,7 @@ namespace Network.Sockets
 
         public void ReceivePacket()
         {
-            byte[] buffer = new byte[256];
+            byte[] buffer = new byte[256];  
             _socket.Receive(buffer);
 
             uint key = BitConverter.ToUInt32(buffer, 0);
