@@ -69,7 +69,7 @@ namespace Network.Sockets
 
             for (int i = 0; i < objectDataLength; i++)
             {
-                Buffer.SetByte(data, i, arr2[i]);
+                Buffer.SetByte(data, i + keyDataLength, arr2[i]);
             }
 
             return data;
