@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3b1b1ce176ec38e4782920d0ea412f40
+timeCreated: 1541091440
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 134187
+  packageName: 'Uduino Plugin: Wifi for esp8266 and esp32'
+  packageVersion: 3.5.0
+  assetPath: Assets/Uduino/Examples/Wifi/Basic/UduinoWifi_ReadWrite.cs
+  uploadId: 485550
