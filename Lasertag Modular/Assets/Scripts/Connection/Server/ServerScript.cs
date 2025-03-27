@@ -26,12 +26,9 @@ class ServerConnection : MonoBehaviour
         IPAddress ipAddress = GetLocalIPAddress();
 
         //IPAddress ipAddress = Dns.GetHostEntry("localhost").AddressList[0];
-        int port = 8080;
+        int port = FindAvailablePort(8050, 100);
         server = new TcpListener(ipAddress, port);
-        server.Start();
 
-        Debug.Log($"Server started on ip {ipAddress.ToString()} on port {port}...");
-        
         acceptClientsThread = new Thread(LookForClients);
 
         acceptClientsThread.Start();
@@ -68,6 +65,34 @@ class ServerConnection : MonoBehaviour
             }
         }
         throw new Exception("No network adapters with a valid IPv4 address found.");
+    }
+
+    private int FindAvailablePort(int startPort, int maxAttempts)
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            int testPort = startPort + i;
+            if (IsPortAvailable(testPort))
+            {
+                return testPort;
+            }
+        }
+        return -1; // No available port found
+    }
+
+    private bool IsPortAvailable(int port)
+    {
+        try
+        {
+            TcpListener testListener = new TcpListener(IPAddress.Any, port);
+            testListener.Start();
+            testListener.Stop();
+            return true; // Port is available
+        }
+        catch (SocketException)
+        {
+            return false; // Port is in use
+        }
     }
 }
 

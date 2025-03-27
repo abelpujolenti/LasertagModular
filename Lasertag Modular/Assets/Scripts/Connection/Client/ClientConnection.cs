@@ -12,8 +12,8 @@ public class ClientConnection : MonoBehaviour
     async void Start()
     {
 
-        string serverIP = "10.40.1.53";
-        int port = 8080;
+        string serverIP = "10.40.2.189";
+        int port = 8079;
 
         Debug.Log($"Attempting to connect to {serverIP}:{port}...");
 
@@ -22,14 +22,20 @@ public class ClientConnection : MonoBehaviour
 
     async Task ConnectToServer(string ip, int port)
     {
-
-        await Task.Delay(TimeSpan.FromSeconds(3));
-
         client = new TcpClient();
-        await client.ConnectAsync(ip, port);
-        isConnected = true;
+        try
+        {
+            await client.ConnectAsync(ip, port);
+            isConnected = true;
 
-        Debug.Log("Connected to server!");
+            Debug.Log("Connected to server!");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log($"Failed to connect on port {port} {ex}");
+
+            await ConnectToServer(ip, port + 1);
+        }
     }
 
 
