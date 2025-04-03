@@ -44,7 +44,7 @@ namespace Network.NetEntities
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (_serverSocketManager.StartListener(ip, _portToListen))
+                    if (_serverSocketManager.StartListener(_portToListen))
                     {
 
                         Debug.Log($"Server started on ip {ip.ToString()}, on port {_portToListen})");
