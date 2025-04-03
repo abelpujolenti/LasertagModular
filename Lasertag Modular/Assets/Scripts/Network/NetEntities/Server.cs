@@ -38,44 +38,24 @@ namespace Network.NetEntities
 
             _portToListen = FindAvailablePort(_portToListen, _triesToFindPort);
 
-            IPAddress ipAddress = GetLocalIPAddress();
-
-            //var host = Dns.GetHostEntry(Dns.GetHostName());
-            //foreach (var ip in host.AddressList)
-            //{
-            //    if (ip.AddressFamily == AddressFamily.InterNetwork)
-            //    {
-            //        Debug.Log(ip.ToString());
-            //    }
-            //}
-
-            if (_serverSocketManager.StartListener(ipAddress, _portToListen))
+            
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
             {
-
-                Debug.Log($"Server started on ip {ipAddress.ToString()}, on port {_portToListen})");
-
-                _serverSocketManager.StartLoop();
-            }
-        }
-
-        private IPAddress GetLocalIPAddress()
-        {
-            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (nic.OperationalStatus == OperationalStatus.Up &&
-                    nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    foreach (UnicastIPAddressInformation ip in nic.GetIPProperties().UnicastAddresses)
+                    if (_serverSocketManager.StartListener(ip, _portToListen))
                     {
-                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork &&
-                            !IPAddress.IsLoopback(ip.Address))
-                        {
-                            return ip.Address; // Return the first valid LAN IP
-                        }
+
+                        Debug.Log($"Server started on ip {ip.ToString()}, on port {_portToListen})");
+
+                        _serverSocketManager.StartLoop();
+                        return;
                     }
                 }
             }
-            throw new Exception("No network adapters with a valid IPv4 address found.");
+
+            
         }
 
         public int FindAvailablePort(int startPort, int maxAttempts)
