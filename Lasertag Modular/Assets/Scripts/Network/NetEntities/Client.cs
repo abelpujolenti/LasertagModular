@@ -13,6 +13,7 @@ namespace Network.NetEntities
     {
         [SerializeField] private string _ipAddress;
         [SerializeField] private int _portToListen;
+        [SerializeField] private int _triesToFindPort;
 
         private TcpSocket _socketWithServer;
         
@@ -38,7 +39,7 @@ namespace Network.NetEntities
 
         private void ConnectToServer(IPEndPoint ipEndPoint)
         {
-            if (!_serverSocketManager.ConnectToNetEntity(ipEndPoint))
+            if (!_serverSocketManager.ConnectToNetEntity(ipEndPoint, _triesToFindPort))
             {
                 return;
             }

@@ -77,7 +77,7 @@ namespace Network.Sockets
             _listener = null;
         }
 
-        public bool ConnectToNetEntity(IPEndPoint ipEndPoint)
+        public bool ConnectToNetEntity(IPEndPoint ipEndPoint, int triesLeft)
         {
             _listenerMutex.WaitOne();
             
@@ -86,6 +86,14 @@ namespace Network.Sockets
             if (!newSocket.Connect(ipEndPoint))
             {
                 _listenerMutex.ReleaseMutex();
+
+                if(triesLeft <= 0)
+                {
+                    ipEndPoint.Port += 1;
+                    ConnectToNetEntity(ipEndPoint, triesLeft);
+
+                }
+
                 return false;
             }
             
