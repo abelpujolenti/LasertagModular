@@ -139,6 +139,18 @@ PrefabInstance:
       propertyPath: m_fontSizeMax
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 73534199}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainScreen.LoadSceneButton, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4170448223676723596, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
       propertyPath: m_Name
       value: BasicButton
@@ -940,6 +952,18 @@ PrefabInstance:
     - target: {fileID: 1233915230704224255, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
       propertyPath: m_fontSizeMax
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1734628827}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148421134951620145, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainScreen.LoadSceneButton, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4170448223676723596, guid: 3fb2b1b0a9bdb0c42ac22079ac746047, type: 3}
       propertyPath: m_Name
