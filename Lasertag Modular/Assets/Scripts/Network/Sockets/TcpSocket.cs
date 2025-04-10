@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
 using System.Threading;
+using Network.Packets;
 using Stream;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace Network.Sockets
         private Mutex _subscriptionsMutex = new Mutex();
         private Mutex _socketDisconnectionMutex = new Mutex();
 
-        private Dictionary<uint, OnReceivePacket> _subscriptions = new Dictionary<uint, OnReceivePacket>();
+        private Dictionary<PacketKeys, OnReceivePacket> _subscriptions = new Dictionary<PacketKeys, OnReceivePacket>();
 
         private List<OnSocketDisconnect> _disconnectionSubscriptions = new List<OnSocketDisconnect>();
 
@@ -82,10 +82,8 @@ namespace Network.Sockets
             byte[] buffer = new byte[256];  
             _socket.Receive(buffer);
 
-            uint key = BitConverter.ToUInt32(buffer, 0);
-
-            Debug.Log("KEY PACKET: " + key);
-
+            PacketKeys key = (PacketKeys)BitConverter.ToUInt32(buffer, 0);
+            
             int sizeOfUint = sizeof(uint);
             
             byte[] data = new byte[buffer.Length - sizeOfUint];
@@ -99,7 +97,7 @@ namespace Network.Sockets
             ProcessPacket(key, data);
         }
 
-        public void Subscribe(uint key, OnReceivePacket onReceivePacketAction)
+        public void Subscribe(PacketKeys key, OnReceivePacket onReceivePacketAction)
         {
             _subscriptionsMutex.WaitOne();
             
@@ -108,7 +106,7 @@ namespace Network.Sockets
             _subscriptionsMutex.ReleaseMutex();
         }
 
-        public void SubscribeAsync(uint key, OnReceivePacket onReceivePacketAction)
+        public void SubscribeAsync(PacketKeys key, OnReceivePacket onReceivePacketAction)
         {
             Thread subscribeThread = new Thread(() =>
             {
@@ -118,7 +116,7 @@ namespace Network.Sockets
             subscribeThread.Start();
         }
 
-        public void Unsubscribe(uint key)
+        public void Unsubscribe(PacketKeys key)
         {
             _subscriptionsMutex.WaitOne();
 
@@ -127,7 +125,7 @@ namespace Network.Sockets
             _subscriptionsMutex.ReleaseMutex();
         }
 
-        public void UnsubscribeASync(uint key)
+        public void UnsubscribeASync(PacketKeys key)
         {
             Thread unsubscribeThread = new Thread(() =>
             {
@@ -150,7 +148,7 @@ namespace Network.Sockets
             return _socket.Available != 0;
         }
 
-        private void ProcessPacket(uint key, byte[] data)
+        private void ProcessPacket(PacketKeys key, byte[] data)
         {
             _subscriptionsMutex.WaitOne();
             

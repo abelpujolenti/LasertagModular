@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using Network.Packets;
 using Network.Sockets;
-using Stream;
 using UnityEngine;
 //typdef
-using OnReceivePacket = System.Action<byte[]>;
 
 namespace Network.NetEntities
 {
@@ -54,18 +53,81 @@ namespace Network.NetEntities
                 foreach (TcpSocket socket in sockets)
                 {
                     _socketWithServer = socket;
-            
-                    _socketWithServer.Subscribe(0, (bits) =>
-                    {
-                        Test a = bits.ByteArrayToObjectT<Test>();
-                        Debug.Log(a.sos);
-                    });
+                    
+                    SubscribeToServerPackets();
                 }
                     
                 _serverSocketManager.StartLoop();
             };
 
             _serverSocketManager.GetSocketsAsync(action);
+        }
+
+        private void SubscribeToServerPackets()
+        {
+            SubscribeToSetupMobileResponse();
+            SubscribeToSetupVestResponse();
+            SubscribeToSetupWeaponResponse();
+            SubscribeToPlayerReadyToPlay();
+            SubscribeToCheckedPlayersAmount();
+            SubscribeToReadyPlayersAmount();
+            SubscribeToStartGame();
+        }
+
+        private void SubscribeToSetupMobileResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_MOBILE_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupVestResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_VEST_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupWeaponResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_WEAPON_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToPlayerReadyToPlay()
+        {
+            _socketWithServer.Subscribe(PacketKeys.PLAYER_READY_TO_PLAY, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToCheckedPlayersAmount()
+        {
+            _socketWithServer.Subscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToReadyPlayersAmount()
+        {
+            _socketWithServer.Subscribe(PacketKeys.READY_PLAYERS_AMOUNT, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToStartGame()
+        {
+            _socketWithServer.Subscribe(PacketKeys.START_GAME, (bytes) =>
+            {
+                
+            });
         }
     }
 }
