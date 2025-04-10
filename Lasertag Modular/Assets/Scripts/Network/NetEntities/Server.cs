@@ -6,6 +6,7 @@ using System.Threading;
 using Network.Sockets;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Stream;
 
 namespace Network.NetEntities
 {
@@ -33,7 +34,13 @@ namespace Network.NetEntities
                     sos ="sos", 
                     puto = 5
                 });
-                
+
+                socket.Subscribe(1, (bytes) =>
+                {
+                    Test a = ConvertTo.ByteArrayToObjectT<Test>(bytes);
+                    Debug.Log("FROM ARDUINO " + a.sos + " " + a.puto);
+                });
+
             });
 
             _portToListen = FindAvailablePort(_portToListen, _triesToFindPort);
