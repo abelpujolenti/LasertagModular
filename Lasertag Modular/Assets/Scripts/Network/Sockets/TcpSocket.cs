@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Threading;
 using Network.Packets;
 using Stream;
-using UnityEngine;
 
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
@@ -42,14 +41,14 @@ namespace Network.Sockets
             return _socket.Connected;
         }
 
-        public void SendPacket(uint key)
+        public void SendPacket(PacketKeys key)
         {
-            _socket.Send(BitConverter.GetBytes(key));
+            _socket.Send(BitConverter.GetBytes((ushort)key));
         }
 
-        public void SendPacket<T>(uint key, T obj)
+        public void SendPacket<T>(PacketKeys key, T obj)
         {
-            byte[] keyData = BitConverter.GetBytes(key);
+            byte[] keyData = BitConverter.GetBytes((ushort)key);
 
             byte[] objectData = ConvertTo.ObjectToByteArray(obj);
             

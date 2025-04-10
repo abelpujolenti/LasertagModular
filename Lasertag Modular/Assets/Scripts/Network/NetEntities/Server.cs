@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using Network.Packets;
 using Network.Sockets;
 using UnityEngine;
-using Stream;
 
 namespace Network.NetEntities
 {
@@ -24,9 +23,7 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
                 
-                SubscribeToSetupMobile(socket);
-                SubscribeToSetupVest(socket);
-                SubscribeToSetupWeapon(socket);
+                SubscribeToClientPackets(socket);
             });
 
             _portToListen = FindAvailablePort(_portToListen, _triesToFindPort);
@@ -47,32 +44,8 @@ namespace Network.NetEntities
                 }
             }
         }
-
-        private void SubscribeToSetupMobile(TcpSocket socket)
-        {
-            socket.Subscribe(PacketKeys.SETUP_MOBILE, (bytes) => 
-            {
-                    
-            });
-        }
-
-        private void SubscribeToSetupVest(TcpSocket socket)
-        {
-            socket.Subscribe(PacketKeys.SETUP_VEST, (bytes) => 
-            {
-                    
-            });
-        }
-
-        private void SubscribeToSetupWeapon(TcpSocket socket)
-        {
-            socket.Subscribe(PacketKeys.SETUP_WEAPON, (bytes) => 
-            {
-                    
-            });
-        }
-
-        public int FindAvailablePort(int startPort, int maxAttempts)
+        
+        private int FindAvailablePort(int startPort, int maxAttempts)
         {
             for (int i = 0; i < maxAttempts; i++)
             {
@@ -99,6 +72,37 @@ namespace Network.NetEntities
             {
                 return false; // Port is in use
             }
+        }
+
+        private void SubscribeToClientPackets(TcpSocket socket)
+        {
+            SubscribeToSetupMobile(socket);
+            SubscribeToSetupVest(socket);
+            SubscribeToSetupWeapon(socket);
+        }
+
+        private void SubscribeToSetupMobile(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_MOBILE, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupVest(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_VEST, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupWeapon(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_WEAPON, (bytes) => 
+            {
+                
+            });
         }
     }
 }

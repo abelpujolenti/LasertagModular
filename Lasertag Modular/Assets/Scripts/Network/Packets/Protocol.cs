@@ -1,6 +1,6 @@
 ﻿namespace Network.Packets
 {
-    public enum PacketKeys
+    public enum PacketKeys : ushort
     {
         SETUP_MOBILE = 0,
         SETUP_MOBILE_RESPONSE = 1,
@@ -18,7 +18,7 @@
         END_GAME = 20,
     }
 
-    public enum Champions
+    public enum Champions : ushort
     {
         ENGINEER,
         SCOUT,
@@ -28,6 +28,16 @@
         NINJA,
         HEALER,
         HACKER
+    }
+
+    public class CardInfo
+    {
+        public string ipAddress;
+        public int portToListen;
+        public ushort gameId;
+        public ushort playerId;
+        public Champions champion;
+        public uint hexColor;
     }
 
     public class SetupMobile
