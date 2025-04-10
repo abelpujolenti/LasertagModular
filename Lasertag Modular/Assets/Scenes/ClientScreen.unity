@@ -362,7 +362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45bad8e64625c243a1c8f83922ddb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 7863987}
+  inputField: {fileID: 0}
+  scrollRect: {fileID: 0}
 --- !u!1 &27338948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2939,7 +2940,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45bad8e64625c243a1c8f83922ddb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 692017336}
+  inputField: {fileID: 0}
+  scrollRect: {fileID: 0}
 --- !u!1 &751065118
 GameObject:
   m_ObjectHideFlags: 0
@@ -3413,8 +3415,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 330772687}
   - {fileID: 1164855506}
+  - {fileID: 330772687}
   m_Father: {fileID: 1122829645}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3856,7 +3858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45bad8e64625c243a1c8f83922ddb36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 999429619}
+  inputField: {fileID: 0}
+  scrollRect: {fileID: 0}
 --- !u!1 &1087280938
 GameObject:
   m_ObjectHideFlags: 0

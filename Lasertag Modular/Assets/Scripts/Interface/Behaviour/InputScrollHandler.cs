@@ -1,20 +1,31 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
-public class ScrollingInputField : MonoBehaviour
+public class AutoWrapInputField : MonoBehaviour
 {
-    public TMP_InputField inputField;
+    public InputField inputField;
+    public ScrollRect scrollRect;
 
-    private void Start()
+    /*private void Start()
     {
-        if (inputField == null)
-            inputField = GetComponent<TMP_InputField>();
+        if (inputField != null)
+        {
+            inputField.lineType = InputField.LineType.MultiLineNewline;
+            inputField.textComponent.enableWordWrapping = true;
+        }
 
-        inputField.onValueChanged.AddListener(OnTextChanged);
+        if (scrollRect != null && inputField != null)
+        {
+            scrollRect.horizontal = false;
+        }
     }
 
-    private void OnTextChanged(string text)
+    public void OnTextChanged(string text)
     {
-        inputField.stringPosition = text.Length;
-    }
+        if (inputField != null)
+        {
+            inputField.textComponent.text = text;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(inputField.textComponent.rectTransform);
+        }
+    }*/
 }
