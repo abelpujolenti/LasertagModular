@@ -147,6 +147,7 @@ Test ProcessTestPacket(byte data[])
 
 
     newTest.PrintThings();
+    SendTestPacket(newTest);
 }
 
 
@@ -167,10 +168,10 @@ void SendTestPacket(Test test)
  
   //Extract byte per byte
   uint32_t key = (int)PacketKeys::TEST;
-  buffer[0] = key & 255;
-  buffer[1] = key & 255 < 8;
-  buffer[2] = key & 255 < 16;
-  buffer[3] = key & 255 < 32;
+  buffer[0] = (byte) key & 255;
+  buffer[1] = (byte) key & 255 << 8;
+  buffer[2] = (byte) key & 255 << 16;
+  buffer[3] = (byte) key & 255 << 32;
 
   //Add json string
   for(int i = 4; i < BYTE_BUFFER_SIZE; i++)
