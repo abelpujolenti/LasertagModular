@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Threading;
 using Stream;
+using UnityEngine;
+
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;
@@ -81,7 +83,9 @@ namespace Network.Sockets
             _socket.Receive(buffer);
 
             uint key = BitConverter.ToUInt32(buffer, 0);
-            
+
+            Debug.Log("KEY PACKET: " + key);
+
             int sizeOfUint = sizeof(uint);
             
             byte[] data = new byte[buffer.Length - sizeOfUint];
@@ -89,8 +93,9 @@ namespace Network.Sockets
             for (int i = sizeOfUint; i < buffer.Length; i++)
             {
                 data[i - sizeOfUint] = buffer[i];
+                
             }
-            
+
             ProcessPacket(key, data);
         }
 
