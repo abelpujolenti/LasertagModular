@@ -1,31 +1,14 @@
 #include <WiFiS3.h>
 #include <Arduino_JSON.h>
-
+#include "TestPacket.hpp"
 
 const char* WIFI_SSID = "ENTI";          // CHANGE TO YOUR WIFI SSID
 const char* WIFI_PASSWORD = "Entialum#1714";       // CHANGE TO YOUR WIFI PASSWORD
 const char* TCP_SERVER_ADDR = "10.40.2.35";  // CHANGE TO TCP SERVER'S IP ADDRESS
-const int TCP_SERVER_PORT = 2800;
+const int TCP_SERVER_PORT = 3000;
 const int BYTE_BUFFER_SIZE = 256;
 
 WiFiClient TCP_client;
-
-//Keys
-enum class PacketKeys
-{
-  TEST = 1
-}
-
-
-class Test
-{
-  public:
-    String sos;
-    int puto;
-    Test(String _sos, int _puto) { sos = _sos; puto = _puto; }
-    void PrintThings() {Serial.println("THINGS INSIDE PACKET ARE: " + sos + ", " + puto);}
-};
-
 
 void setup() {
   Serial.begin(9600);
@@ -183,18 +166,18 @@ void SendTestPacket(Test test)
   byte buffer[BYTE_BUFFER_SIZE];
  
   //Extract byte per byte
-  uint32_t key = PacketKeys::TEST;
+  uint32_t key = (int)PacketKeys::TEST;
   buffer[0] = key & 255;
   buffer[1] = key & 255 < 8;
   buffer[2] = key & 255 < 16;
   buffer[3] = key & 255 < 32;
 
   //Add json string
-  for(int i = 4, i < BYTE_BUFFER_SIZE; i++)
+  for(int i = 4; i < BYTE_BUFFER_SIZE; i++)
   {
     buffer[i] = jsonBuffer[i-4];
   }
 
   //Add json to byte array
-  TCP_Client.write(buffer);
+  TCP_client.write(buffer, sizeof(buffer));
 }
