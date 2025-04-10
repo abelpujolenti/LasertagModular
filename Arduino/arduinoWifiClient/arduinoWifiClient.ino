@@ -110,7 +110,7 @@ void ProcessPacket(int key, byte data[])
 {
   switch(key)
   {
-    case 1:
+    case -1:
       ProcessTestPacket(data);
       break;
   }
