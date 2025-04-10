@@ -1,3 +1,5 @@
+#include <Arduino_JSON.h>
+
 //Keys
 enum class PacketKeys
 {
@@ -28,77 +30,160 @@ class Test
     void PrintThings() {Serial.println("THINGS INSIDE PACKET ARE: " + sos + ", " + puto);}
 };
 
-class SetupMobile
+class Packet
 {
-    
+  uint32_t key;
+
+  //Passa variables de cada packet específic a json var
+  virtual JSONVar ToJson() = 0;
 };
 
-class SetupMobileResponse
+class SetupMobile : public Packet
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
+};
+
+class SetupMobileResponse : public Packet
+{
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class SetupVest
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class SetupVestResponse
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class SetupWeapon
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class SetupWeaponResponse
 {
-    
+   JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    }; 
 };
 
 class PlayerReadyToChecked
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class PlayerReadyToPlay
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class CheckedPlayersAmount
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class ReadyPlayersAmount
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class StartGame
 {
-    
+   JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    }; 
 };
 
 class Hit
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class HitResponse
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class Heal
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };
 
 class EndGame
 {
-    
+    JSONVar ToJson() override
+    {
+      JSONVar json;
+      //...
+      return json;
+    };
 };

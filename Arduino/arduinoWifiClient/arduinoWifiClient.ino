@@ -52,6 +52,19 @@ void setup() {
   } else {
     Serial.println("Failed to connect to TCP server");
   }
+
+  Packet* packets[2];
+  SetupMobile* setupPacket = new SetupMobile();
+  packets[0] = setupPacket;
+  SetupMobileResponse* setupPacket2 = (SetupMobileResponse*) packets[0];
+
+  
+  Serial.println(setupPacket2);
+
+  while(true)
+  {
+
+  }
 }
 
 
