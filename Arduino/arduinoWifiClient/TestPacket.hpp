@@ -1,19 +1,20 @@
 #include <Arduino_JSON.h>
 
+#define BYTE_BUFFER_SIZE 256
+
 //Keys
 enum class PacketKeys
 {
-  TEST = -1,
-  SETUP_MOBILE = 0,
-  SETUP_MOBILE_RESPONSE = 1,
+  //SETUP_MOBILE = 0,
+  //SETUP_MOBILE_RESPONSE = 1,
   SETUP_VEST = 2,
   SETUP_VEST_RESPONSE = 3,
   SETUP_WEAPON = 4,
   SETUP_WEAPON_RESPONSE = 5,
-  PLAYER_READY_TO_CHECKED = 6,
-  PLAYER_READY_TO_PLAY = 7,
-  CHECKED_PLAYERS_AMOUNT = 8,
-  READY_PLAYERS_AMOUNT = 9,
+  //PLAYER_READY_TO_CHECKED = 6,
+  //PLAYER_READY_TO_PLAY = 7,
+  //CHECKED_PLAYERS_AMOUNT = 8,
+  //READY_PLAYERS_AMOUNT = 9,
   START_GAME = 10,
   HIT = 11,
   HIT_RESPONSE = 12,
@@ -21,169 +22,200 @@ enum class PacketKeys
   END_GAME = 20,
 };
 
-class Test
+enum class Champions
 {
-  public:
-    String sos;
-    int puto;
-    Test(String _sos, int _puto) { sos = _sos; puto = _puto; }
-    void PrintThings() {Serial.println("THINGS INSIDE PACKET ARE: " + sos + ", " + puto);}
+  ENGINEER,
+  SCOUT,
+  DEFENDER,
+  DEMOLISHER,
+  REFLECTOR,
+  NINJA,
+  HEALER,
+  HACKER
 };
 
 class Packet
 {
+public:
   uint32_t key;
 
-  //Passa variables de cada packet específic a json var
-  virtual JSONVar ToJson() = 0;
+  Packet(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) { }
+  ~Packet() { }
+
+  JSONVar BufferToJson(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)])
+  {
+    String jsonString = (char*)data;
+    JSONVar jsonObject = JSON.parse(jsonString);
+    return jsonObject;
+  }
+
+  virtual JSONVar ClassToJson() = 0;
 };
 
-class SetupMobile : public Packet
+
+class SetupVest : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  unsigned short gameId;
+  unsigned short playerId;
+
+  SetupVest(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    gameId = jsonObject["gameId"];
+    playerId =jsonObject["playerId"];
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["gameId"] = gameId;
+    jsonObject["playerId"] = playerId;
+    return jsonObject;
+  }
 };
 
-class SetupMobileResponse : public Packet
+class SetupVestResponse : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  bool isCorrect;
+
+  SetupVestResponse(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    isCorrect = jsonObject["isCorrect"];
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["isCorrect"] = isCorrect;
+    return jsonObject;
+  }
 };
 
-class SetupVest
+class SetupWeapon : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  unsigned short gameId;
+  unsigned short playerId;
+
+  SetupWeapon(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    gameId = jsonObject["gameId"];
+    playerId =jsonObject["playerId"];
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["gameId"] = gameId;
+    jsonObject["playerId"] = playerId;
+    return jsonObject;
+  }
 };
 
-class SetupVestResponse
+class SetupWeaponResponse : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  bool isCorrect;
+
+  SetupWeaponResponse(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    isCorrect = jsonObject["isCorrect"];
+  }
+
+JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["isCorrect"] = isCorrect;
+    return jsonObject;
+  }
 };
 
-class SetupWeapon
+class StartGame : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  StartGame(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    //Assign variables
+    return jsonObject;
+  }
 };
 
-class SetupWeaponResponse
+class Hit : public Packet
 {
-   JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    }; 
+public:
+  Hit(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    //Assign variables
+    return jsonObject;
+  }
 };
 
-class PlayerReadyToChecked
+class HitResponse : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  HitResponse(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    //Assign variables
+    return jsonObject;
+  }
 };
 
-class PlayerReadyToPlay
+class Heal : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+public:
+  Heal(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    //Assign variables
+    return jsonObject;
+  }
 };
 
-class CheckedPlayersAmount
+class EndGame : public Packet
 {
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
-};
+public:
+  EndGame(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+  }
 
-class ReadyPlayersAmount
-{
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
-};
-
-class StartGame
-{
-   JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    }; 
-};
-
-class Hit
-{
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
-};
-
-class HitResponse
-{
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
-};
-
-class Heal
-{
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
-};
-
-class EndGame
-{
-    JSONVar ToJson() override
-    {
-      JSONVar json;
-      //...
-      return json;
-    };
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    //Assign variables
+    return jsonObject;
+  }
 };
