@@ -40,6 +40,7 @@ public:
   uint32_t key;
 
   Packet(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) { }
+  Packet() { }
   ~Packet() { }
 
   JSONVar BufferToJson(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)])
@@ -66,6 +67,12 @@ public:
     playerId =jsonObject["playerId"];
   }
 
+  SetupVest(unsigned short _gameId, unsigned short _playerId)
+  {
+    gameId = _gameId;
+    playerId = _playerId;
+  }
+
   JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
@@ -84,6 +91,11 @@ public:
   {
     JSONVar jsonObject = BufferToJson(data);
     isCorrect = jsonObject["isCorrect"];
+  }
+
+  SetupVestResponse(bool _isCorrect)
+  {
+    isCorrect = _isCorrect;
   }
 
   JSONVar ClassToJson() override
@@ -107,6 +119,12 @@ public:
     playerId =jsonObject["playerId"];
   }
 
+  SetupWeapon(unsigned short _gameId, unsigned short _playerId)
+  {
+    gameId = _gameId;
+    playerId = _playerId;
+  }
+
   JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
@@ -127,6 +145,11 @@ public:
     isCorrect = jsonObject["isCorrect"];
   }
 
+  SetupWeaponResponse(bool _isCorrect)
+  {
+    isCorrect = _isCorrect;
+  }
+
 JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
@@ -143,6 +166,8 @@ public:
     JSONVar jsonObject = BufferToJson(data);
     //Assign variables
   }
+
+  StartGame() { }
 
   JSONVar ClassToJson() override
   {
@@ -161,6 +186,8 @@ public:
     //Assign variables
   }
 
+  Hit() { }
+
   JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
@@ -177,6 +204,8 @@ public:
     JSONVar jsonObject = BufferToJson(data);
     //Assign variables
   }
+
+  HitResponse() { }
 
   JSONVar ClassToJson() override
   {
@@ -195,6 +224,8 @@ public:
     //Assign variables
   }
 
+  Heal() { }
+
   JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
@@ -211,6 +242,8 @@ public:
     JSONVar jsonObject = BufferToJson(data);
     //Assign variables
   }
+
+  EndGame() { }
 
   JSONVar ClassToJson() override
   {

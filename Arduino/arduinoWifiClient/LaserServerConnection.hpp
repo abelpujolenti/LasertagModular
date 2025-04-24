@@ -2,6 +2,16 @@
 #include <Arduino_JSON.h>
 #include "TestPacket.hpp"
 
+enum class WifiStatus
+{
+  ALL_OK = 0,
+  NO_MODULE = -1,
+  WRONG_FIRMWARE = -2,
+  WIFI_FAILED = -3,
+  SERVER_CONNECTION_FAILED = -4
+};
+
+
 class LaserServerConnection
 {
 private:
@@ -13,30 +23,28 @@ private:
 public:
 
   //Function will be called while return value is false
-  bool ConnectToServer(const char* _WIFI_SSID, const char* _WIFI_PASSWORD, const char* _TCP_SERVER_ADDR, const int _TCP_SERVER_PORT)
+  WifiStatus ConnectToServer(const char* _WIFI_SSID, const char* _WIFI_PASSWORD, const char* _TCP_SERVER_ADDR, const int _TCP_SERVER_PORT)
   {
     //ATTEMPT TO CONNECT TO WIFI
     if (WiFi.status() == WL_NO_MODULE)
       //Communication with WiFi module failed
-      return false;
+      return WifiStatus::NO_MODULE;
 
     String fv = WiFi.firmwareVersion();
     if (fv < WIFI_FIRMWARE_LATEST_VERSION)
       //Upgrade firmware (?)
-      return false;
+      return WifiStatus::WRONG_FIRMWARE;
 
-    while (WiFi.begin(_WIFI_SSID, _WIFI_PASSWORD) != WL_CONNECTED)
+    if (WiFi.begin(_WIFI_SSID, _WIFI_PASSWORD) != WL_CONNECTED)
     {
       //Failed to connect to WiFi
-      //Wait 10 seconds for connection
-      delay(1000);
-      return false;
+      return WifiStatus::WIFI_FAILED;
     }
 
     //ATTEMPT TO CONNECT TO SERVER
     if (!TCP_client.connect(_TCP_SERVER_ADDR, _TCP_SERVER_PORT))
       //Failed to connect to TCP server
-      return false;
+      return WifiStatus::SERVER_CONNECTION_FAILED;
 
     //SEND HELLO TO SERVER
     SendHello();
@@ -47,13 +55,17 @@ public:
     TCP_SERVER_ADDR = (char*)_TCP_SERVER_ADDR;
     TCP_SERVER_PORT = (int)_TCP_SERVER_PORT;
 
-    return true;
+    return WifiStatus::ALL_OK;
   }
 
   void Update()
   {
     ListenToPackets();
     CheckDisconnectionAndReconnection();
+
+    //Test, remove later
+    SetupVest* testPacket = new SetupVest(2,2);
+    SendPacket(testPacket, PacketKeys::SETUP_VEST);
   }
 
   void SendHello()
@@ -73,7 +85,6 @@ public:
       if(!TCP_client.connect(TCP_SERVER_ADDR, TCP_SERVER_PORT))
       {
         //Failed to reconnect
-        delay(1000);
         return;
       }
 
