@@ -28,6 +28,7 @@ public:
     while (WiFi.begin(_WIFI_SSID, _WIFI_PASSWORD) != WL_CONNECTED)
     {
       //Failed to connect to WiFi
+      delay(1000);
       return false;
     }
 
@@ -54,11 +55,8 @@ public:
     CheckDisconnectionAndReconnection();
 
     //Test, remove later
-    SetupVest packet* testPacket;
-    testPacket.gameId = 2;
-    testPacket.playerId = 2;
-
-    SendPacket(testPacket, 2);
+    SetupVestResponse* testPacket = new SetupVestResponse(true);
+    SendPacket(testPacket, PacketKeys::SETUP_VEST_RESPONSE);
   }
 
   void SendHello()
@@ -78,6 +76,7 @@ public:
       if(!TCP_client.connect(TCP_SERVER_ADDR, TCP_SERVER_PORT))
       {
         //Failed to reconnect
+        delay(1000);
         return;
       }
 
