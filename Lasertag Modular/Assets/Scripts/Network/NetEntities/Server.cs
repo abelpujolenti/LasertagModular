@@ -23,7 +23,7 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
                 
-                SubscribeToClientPackets(socket);
+                SubscribeToLobbyPackets(socket);
             });
 
             _portToListen = FindAvailablePort(_portToListen, _triesToFindPort);
@@ -74,11 +74,28 @@ namespace Network.NetEntities
             }
         }
 
-        private void SubscribeToClientPackets(TcpSocket socket)
+        private void SubscribeToLobbyPackets(TcpSocket socket)
         {
             SubscribeToSetupMobile(socket);
             SubscribeToSetupVest(socket);
             SubscribeToSetupWeapon(socket);
+        }
+
+        private void UnsubscribeToLobbyPacket(TcpSocket socket)
+        {
+            socket.Unsubscribe(PacketKeys.SETUP_MOBILE);
+            socket.Unsubscribe(PacketKeys.SETUP_VEST);
+            socket.Unsubscribe(PacketKeys.SETUP_WEAPON);
+        }
+
+        private void SubscribeToInGamePackets(TcpSocket socket)
+        {
+            SubscribeToHit(socket);
+        }
+
+        private void UnsubscribeToInGamePackets(TcpSocket socket)
+        {
+            socket.Unsubscribe(PacketKeys.HIT);
         }
 
         private void SubscribeToSetupMobile(TcpSocket socket)
@@ -100,6 +117,14 @@ namespace Network.NetEntities
         private void SubscribeToSetupWeapon(TcpSocket socket)
         {
             socket.Subscribe(PacketKeys.SETUP_WEAPON, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToHit(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.HIT, (bytes) =>
             {
                 
             });

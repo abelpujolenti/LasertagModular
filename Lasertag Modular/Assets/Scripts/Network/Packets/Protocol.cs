@@ -15,7 +15,8 @@
         HIT = 10,
         HIT_RESPONSE = 11,
         HEAL = 12,
-        END_GAME = 20,
+        HEAL_RESPONSE = 13,
+        END_GAME = 20
     }
 
     public enum Champions : ushort
@@ -34,16 +35,16 @@
     {
         public string ipAddress;
         public int portToListen;
-        public ushort gameId;
-        public ushort playerId;
+        public byte gameId;
+        public byte playerId;
         public Champions champion;
         public uint hexColor;
     }
 
     public class SetupMobile
     {
-        public ushort gameId;
-        public ushort playerId;
+        public byte gameId;
+        public byte playerId;
         public Champions champion;
     }
 
@@ -57,8 +58,8 @@
 
     public class SetupVest
     {
-        public ushort gameId;
-        public ushort playerId;
+        public byte gameId;
+        public byte playerId;
     }
 
     public class SetupVestResponse
@@ -68,8 +69,8 @@
 
     public class SetupWeapon
     {
-        public ushort gameId;
-        public ushort playerId;
+        public byte gameId;
+        public byte playerId;
     }
 
     public class SetupWeaponResponse
@@ -79,31 +80,35 @@
 
     public class CheckedPlayersAmount
     {
-        public ushort checkedPlayersAmount;
+        public byte checkedPlayersAmount;
     }
 
     public class ReadyPlayersAmount
     {
-        public ushort readyPlayersAmount;
+        public byte readyPlayersAmount;
     }
 
     public class Hit
     {
-        
+        public byte device;
+        public byte player;
+        public byte zone;
     }
 
     public class HitResponse
     {
-        
+        public byte currentLives;
+        public byte zone;
     }
 
     public class Heal
     {
-        
+        public byte healAmount;
+        public byte player;
     }
 
-    public class EndGame
+    public class HealResponse
     {
-        
+        public byte currentLife;
     }
 }

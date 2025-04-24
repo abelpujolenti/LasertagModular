@@ -62,7 +62,7 @@ namespace Network.NetEntities
                     
                     SendSetupMobile();
                     
-                    SubscribeToServerPackets();
+                    SubscribeToLobbyPackets();
                 }
                     
                 _serverSocketManager.StartLoop();
@@ -83,7 +83,7 @@ namespace Network.NetEntities
             _socketWithServer.SendPacket(PacketKeys.SETUP_MOBILE, setupMobile);
         }
 
-        private void SubscribeToServerPackets()
+        private void SubscribeToLobbyPackets()
         {
             SubscribeToSetupMobileResponse();
             SubscribeToSetupVestResponse();
@@ -92,6 +92,29 @@ namespace Network.NetEntities
             SubscribeToCheckedPlayersAmount();
             SubscribeToReadyPlayersAmount();
             SubscribeToStartGame();
+        }
+
+        private void UnsubscribeToLobbyPackets()
+        {
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_MOBILE_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_VEST_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_WEAPON_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.PLAYER_READY_TO_PLAY);
+            _socketWithServer.Unsubscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT);
+            _socketWithServer.Unsubscribe(PacketKeys.READY_PLAYERS_AMOUNT);
+            _socketWithServer.Unsubscribe(PacketKeys.START_GAME);
+        }
+
+        private void SubscribeToInGamePackets()
+        {
+            SubscribeToHitResponse();
+            SubscribeToHealResponse();
+        }
+
+        private void UnsubscribeToInGamePackets()
+        {
+            _socketWithServer.Unsubscribe(PacketKeys.HIT_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.HEAL);
         }
 
         private void SubscribeToSetupMobileResponse()
@@ -177,6 +200,33 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.START_GAME, (bytes) =>
             {
                 //TODO START GAME
+                UnsubscribeToLobbyPackets();
+                SubscribeToInGamePackets();
+            });
+        }
+
+        private void SubscribeToHitResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.HIT_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToHealResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.HEAL_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToEndGame()
+        {
+            _socketWithServer.Subscribe(PacketKeys.END_GAME, (bytes) =>
+            {
+                UnsubscribeToInGamePackets();
+                SubscribeToLobbyPackets();
             });
         }
     }
