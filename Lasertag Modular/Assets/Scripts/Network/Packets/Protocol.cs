@@ -37,7 +37,12 @@
         public ushort gameId;
         public ushort playerId;
         public Champions champion;
-        public uint hexColor;
+        public string hexColor;
+
+        public string Debug()
+        {
+            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + champion + ", " + hexColor;
+        }
     }
 
     public class SetupMobile
