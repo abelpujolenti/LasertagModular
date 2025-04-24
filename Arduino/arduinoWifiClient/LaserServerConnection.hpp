@@ -64,8 +64,8 @@ public:
     CheckDisconnectionAndReconnection();
 
     //Test, remove later
-    SetupVestResponse* testPacket = new SetupVestResponse(true);
-    SendPacket(testPacket, PacketKeys::SETUP_VEST_RESPONSE);
+    SetupVest* testPacket = new SetupVest(2,2);
+    SendPacket(testPacket, PacketKeys::SETUP_VEST);
   }
 
   void SendHello()
