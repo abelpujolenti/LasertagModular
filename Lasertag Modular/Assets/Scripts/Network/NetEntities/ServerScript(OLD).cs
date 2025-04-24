@@ -1,11 +1,9 @@
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Net.NetworkInformation;
 using System;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Threading;
 using UnityEngine;
-using System.Threading.Tasks;
 
 class ServerConnection : MonoBehaviour
 {
