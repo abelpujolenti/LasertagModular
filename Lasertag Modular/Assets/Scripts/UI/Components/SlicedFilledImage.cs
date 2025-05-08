@@ -1,10 +1,10 @@
+#if UNITY_2017_4 || UNITY_2018_2_OR_NEWER
+using UnityEngine.U2D;
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_2017_4 || UNITY_2018_2_OR_NEWER
-using UnityEngine.U2D;
-#endif
 using Sprites = UnityEngine.Sprites;
 
 #if UNITY_EDITOR

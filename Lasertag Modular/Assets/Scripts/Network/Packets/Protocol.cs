@@ -1,13 +1,13 @@
 ﻿namespace Network.Packets
 {
-    public enum PacketKeys : ushort
+    public enum PacketKeys : byte
     {
         SETUP_MOBILE = 0,
-        SETUP_MOBILE_RESPONSE = 1,
-        SETUP_VEST = 2,
-        SETUP_VEST_RESPONSE = 3,
-        SETUP_WEAPON = 4,
-        SETUP_WEAPON_RESPONSE = 5,
+        SETUP_VEST = 1,
+        SETUP_WEAPON = 2,
+        SETUP_GRENADE = 3,
+        SETUP_CAR = 4,
+        SETUP_RESPONSE = 5,
         PLAYER_READY_TO_PLAY = 6,
         CHECKED_PLAYERS_AMOUNT = 7,
         READY_PLAYERS_AMOUNT = 8,
@@ -19,8 +19,9 @@
         END_GAME = 20
     }
 
-    public enum Champions : ushort
+    public enum Characters : byte
     {
+        NONE,
         ENGINEER,
         SCOUT,
         DEFENDER,
@@ -31,29 +32,21 @@
         HACKER
     }
 
-    public class CardInfo
+    public class CardInformation
     {
         public string ipAddress;
         public int portToListen;
         public byte gameId;
         public byte playerId;
-        public Champions champion;
-        public uint hexColor;
+        public Characters character;
+        public string hexColor;
     }
 
     public class SetupMobile
     {
         public byte gameId;
         public byte playerId;
-        public Champions champion;
-    }
-
-    public class SetupMobileResponse
-    {
-        public bool isCorrect;
-        public string playerName;
-        public bool isVestChecked;
-        public bool isWeaponChecked;
+        public Characters character;
     }
 
     public class SetupVest
@@ -62,20 +55,28 @@
         public byte playerId;
     }
 
-    public class SetupVestResponse
-    {
-        public bool isCorrect;
-    }
-
     public class SetupWeapon
     {
         public byte gameId;
         public byte playerId;
     }
 
-    public class SetupWeaponResponse
+    public class SetupGrenade
     {
-        public bool isCorrect;
+        public byte gameId;
+        public byte playerId;
+    }
+
+    public class SetupCar
+    {
+        public byte gameId;
+        public byte playerId;
+    }
+
+    public class SetupResponse
+    {
+        public string playerName;
+        public byte setupResponse;
     }
 
     public class CheckedPlayersAmount
