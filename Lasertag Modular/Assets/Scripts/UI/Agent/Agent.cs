@@ -1,62 +1,63 @@
-using UnityEditor.SceneManagement;
+using Interface.Agent;
 using UnityEngine;
-using UnityEditor;
-using UnityEngine.InputSystem.LowLevel;
 
-public class Agent : MonoBehaviour, BaseAgent
+namespace UI.Agent
 {
-    private ushort vestCounter = 0;
-    private ushort gunCounter = 1;
-    private ushort mobileCounter = 2;
-
-    CheckCell mobileCell;
-    CheckCell gunCell;
-    CheckCell vestCell;
-
-    [SerializeField] private GameObject gridLayout;
-    [SerializeField] private GameObject _cellPrefab;
-
-    [SerializeField] private string _mobilePath;
-    [SerializeField] private string _gunPath;
-    [SerializeField] private string _vestPath;
-
-    private void Start()
+    public class Agent : MonoBehaviour, IBaseAgent
     {
-        mobileCell = CreateImage();
-        mobileCell.SetImage(_mobilePath);
-        AddImageToGrid(mobileCell.gameObject);
+        private ushort vestCounter = 0;
+        private ushort gunCounter = 1;
+        private ushort mobileCounter = 2;
 
-        gunCell = CreateImage();
-        gunCell.SetImage(_gunPath);
-        AddImageToGrid(gunCell.gameObject);
+        CheckCell mobileCell;
+        CheckCell gunCell;
+        CheckCell vestCell;
 
-        vestCell = CreateImage();
-        vestCell.SetImage(_vestPath);
-        AddImageToGrid(vestCell.gameObject);
+        [SerializeField] private GameObject gridLayout;
+        [SerializeField] private GameObject _cellPrefab;
 
-    }
+        [SerializeField] private string _mobilePath;
+        [SerializeField] private string _gunPath;
+        [SerializeField] private string _vestPath;
 
-    public void IncrementCounter()
-    {
-        mobileCounter++;
-        gunCounter++;
-        vestCounter++;
-    }
+        private void Start()
+        {
+            mobileCell = CreateImage();
+            mobileCell.SetImage(_mobilePath);
+            AddImageToGrid(mobileCell.gameObject);
 
-    public CheckCell CreateImage()
-    {
-        return Instantiate(_cellPrefab).GetComponent<CheckCell>();
-    }
+            gunCell = CreateImage();
+            gunCell.SetImage(_gunPath);
+            AddImageToGrid(gunCell.gameObject);
 
-    public void AddImageToGrid(GameObject cellGameObject) 
-    {
-        cellGameObject.transform.SetParent(gridLayout.transform);
-    }
+            vestCell = CreateImage();
+            vestCell.SetImage(_vestPath);
+            AddImageToGrid(vestCell.gameObject);
 
-    public void CheckState(byte[] checkState)
-    {
-        vestCell.ToggleCheck(checkState[vestCounter] == 1);
-        gunCell.ToggleCheck(checkState[gunCounter] == 1);
-        mobileCell.ToggleCheck(checkState[mobileCounter] == 1);
+        }
+
+        public void IncrementCounter()
+        {
+            mobileCounter++;
+            gunCounter++;
+            vestCounter++;
+        }
+
+        public CheckCell CreateImage()
+        {
+            return Instantiate(_cellPrefab).GetComponent<CheckCell>();
+        }
+
+        public void AddImageToGrid(GameObject cellGameObject) 
+        {
+            cellGameObject.transform.SetParent(gridLayout.transform);
+        }
+
+        public void CheckState(byte[] checkState)
+        {
+            vestCell.ToggleCheck(checkState[vestCounter] == 1);
+            gunCell.ToggleCheck(checkState[gunCounter] == 1);
+            mobileCell.ToggleCheck(checkState[mobileCounter] == 1);
+        }
     }
 }

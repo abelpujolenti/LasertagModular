@@ -5,7 +5,6 @@ using System.Net.Sockets;
 using System.Threading;
 using Network.Packets;
 using Stream;
-
 //typedefs
 using OnReceivePacket = System.Action<byte[]>;
 using OnSocketDisconnect = System.Action<Network.Sockets.TcpSocket>;

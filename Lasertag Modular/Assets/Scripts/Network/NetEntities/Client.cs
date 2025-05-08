@@ -16,7 +16,7 @@ namespace Network.NetEntities
         [SerializeField] private int _portToListen;
         [SerializeField] private int _triesToFindPort;
 
-        private CardInfo _cardInfo;
+        private CardInformation _cardInformation;
 
         private TcpSocket _socketWithServer;
         
@@ -33,13 +33,15 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
             });
+            
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ipAddress), _portToListen));
         }
         
-        public void ReceiveInformationFromCard(CardInfo cardInfo)
+        public void ReceiveInformationFromCard(CardInformation cardInformation)
         {
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(cardInfo.ipAddress), cardInfo.portToListen));
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(cardInformation.ipAddress), cardInformation.portToListen));
 
-            _cardInfo = cardInfo;
+            _cardInformation = cardInformation;
         }
 
         private void ConnectToServer(IPEndPoint ipEndPoint)
@@ -75,9 +77,9 @@ namespace Network.NetEntities
         {
             SetupMobile setupMobile = new SetupMobile
             {
-                gameId = _cardInfo.gameId,
-                playerId = _cardInfo.playerId,
-                champion = _cardInfo.champion
+                gameId = _cardInformation.gameId,
+                playerId = _cardInformation.playerId,
+                character = _cardInformation.character
             };
             
             _socketWithServer.SendPacket(PacketKeys.SETUP_MOBILE, setupMobile);
@@ -85,9 +87,7 @@ namespace Network.NetEntities
 
         private void SubscribeToLobbyPackets()
         {
-            SubscribeToSetupMobileResponse();
-            SubscribeToSetupVestResponse();
-            SubscribeToSetupWeaponResponse();
+            SubscribeToSetupResponse();
             SubscribeToPlayerReadyToPlay();
             SubscribeToCheckedPlayersAmount();
             SubscribeToReadyPlayersAmount();
@@ -96,9 +96,7 @@ namespace Network.NetEntities
 
         private void UnsubscribeToLobbyPackets()
         {
-            _socketWithServer.Unsubscribe(PacketKeys.SETUP_MOBILE_RESPONSE);
-            _socketWithServer.Unsubscribe(PacketKeys.SETUP_VEST_RESPONSE);
-            _socketWithServer.Unsubscribe(PacketKeys.SETUP_WEAPON_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_RESPONSE);
             _socketWithServer.Unsubscribe(PacketKeys.PLAYER_READY_TO_PLAY);
             _socketWithServer.Unsubscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT);
             _socketWithServer.Unsubscribe(PacketKeys.READY_PLAYERS_AMOUNT);
@@ -117,53 +115,15 @@ namespace Network.NetEntities
             _socketWithServer.Unsubscribe(PacketKeys.HEAL);
         }
 
-        private void SubscribeToSetupMobileResponse()
+        private void SubscribeToSetupResponse()
         {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_MOBILE_RESPONSE, (bytes) =>
+            _socketWithServer.Subscribe(PacketKeys.SETUP_RESPONSE, (bytes) =>
             {
-                SetupMobileResponse setupMobileResponse = bytes.ByteArrayToObjectT<SetupMobileResponse>();
-
-                if (!setupMobileResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
+                SetupResponse setupResponse = bytes.ByteArrayToObjectT<SetupResponse>();
                 
                 //TODO PASS PLAYERNAME
                 //TODO PASS IS VEST CHECKED
                 //TODO PASS IS WEAPON CHECKED
-            });
-        }
-
-        private void SubscribeToSetupVestResponse()
-        {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_VEST_RESPONSE, (bytes) =>
-            {
-                SetupVestResponse setupVestResponse = bytes.ByteArrayToObjectT<SetupVestResponse>();
-
-                if (!setupVestResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
-                
-                //TODO PASS IS VEST CHECKED
-            });
-        }
-
-        private void SubscribeToSetupWeaponResponse()
-        {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_WEAPON_RESPONSE, (bytes) =>
-            {
-                SetupWeaponResponse setupWeaponResponse = bytes.ByteArrayToObjectT<SetupWeaponResponse>();
-
-                if (!setupWeaponResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
-                
-                //TODO PASS IS VEST CHECKED
             });
         }
 
