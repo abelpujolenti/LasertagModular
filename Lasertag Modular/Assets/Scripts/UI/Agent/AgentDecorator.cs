@@ -1,44 +1,48 @@
+using Interface.Agent;
 using UnityEngine;
 
-public abstract class AgentDecorator : BaseAgent
+namespace UI.Agent
 {
-    protected BaseAgent decoratedAgent;
-
-    protected ushort _cellCounter = 0;
-
-    protected CheckCell _checkCell;
-
-    protected string _imagePath;    
-
-    public AgentDecorator(BaseAgent decoratedAgent, string imagePath)
+    public abstract class AgentDecorator : IBaseAgent
     {
-        this.decoratedAgent = decoratedAgent;
+        private IBaseAgent decoratedAgent;
 
-        _checkCell = CreateImage();
-        _checkCell.SetImage(imagePath);
-        AddImageToGrid(_checkCell.gameObject);
-        decoratedAgent.IncrementCounter();
-    }
+        private ushort _cellCounter = 0;
 
-    public void IncrementCounter()
-    {
-        _cellCounter++;
-        decoratedAgent.IncrementCounter();
-    }
+        private CheckCell _checkCell;
 
-    public CheckCell CreateImage()
-    {
-        return decoratedAgent.CreateImage();
-    }
+        protected string _imagePath;    
 
-    public void AddImageToGrid(GameObject cellGameObject)
-    {
-        decoratedAgent.AddImageToGrid(cellGameObject);
-    }
+        protected AgentDecorator(IBaseAgent decoratedAgent, string imagePath)
+        {
+            this.decoratedAgent = decoratedAgent;
 
-    public void CheckState(byte[] checkState)
-    {
-        _checkCell.ToggleCheck(checkState[_cellCounter] == 1);
-        decoratedAgent.CheckState(checkState);
+            _checkCell = CreateImage();
+            _checkCell.SetImage(imagePath);
+            AddImageToGrid(_checkCell.gameObject);
+            decoratedAgent.IncrementCounter();
+        }
+
+        public void IncrementCounter()
+        {
+            _cellCounter++;
+            decoratedAgent.IncrementCounter();
+        }
+
+        public CheckCell CreateImage()
+        {
+            return decoratedAgent.CreateImage();
+        }
+
+        public void AddImageToGrid(GameObject cellGameObject)
+        {
+            decoratedAgent.AddImageToGrid(cellGameObject);
+        }
+
+        public void CheckState(byte[] checkState)
+        {
+            _checkCell.ToggleCheck(checkState[_cellCounter] == 1);
+            decoratedAgent.CheckState(checkState);
+        }
     }
 }

@@ -1,7 +1,8 @@
-using UnityEngine;
-using UnityEngine.UI;
+using Network.Packets;
 using TMPro;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ServerScreenHandler : MonoBehaviour
 {
@@ -25,14 +26,14 @@ public class ServerScreenHandler : MonoBehaviour
     public Button Char4;
     public Button Char5;
     public Button Char6;
+    public Button Char7;
+    public Button Char8;
 
     [Header("Team Select")]
     public Toggle TeamSelect; 
 
     [Header("Player Info")]
     public TMP_InputField PlayerName;
-
-    enum Characters { NONE, CH1, CH2, CH3, CH4, CH5, CH6 };
 
     int NormalModeSelected = 0;
     int playerCounter = 1;
@@ -54,12 +55,14 @@ public class ServerScreenHandler : MonoBehaviour
         FourVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(8));
         FiveVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(10));
 
-        Char1.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH1));
-        Char2.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH2));
-        Char3.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH3));
-        Char4.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH4));
-        Char5.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH5));
-        Char6.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.CH6));
+        Char1.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.ENGINEER));
+        Char2.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.SCOUT));
+        Char3.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEFENDER));
+        Char4.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEMOLISHER));
+        Char5.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.REFLECTOR));
+        Char6.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.NINJA));
+        Char7.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HEALER));
+        Char8.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HACKER));
     }
 
     private void OnModeSelected(int value)
@@ -88,7 +91,7 @@ public class ServerScreenHandler : MonoBehaviour
                 CurrentPlayerName = PlayerName.text;
                 PlayerName.text = "";
                 CurrentCharacterSelected = Characters.NONE;
-                UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(null);
                 CurrentTeamSelected = TeamSelect.IsActive() ? "B" : "A";
 
                 //TODO: IF HALF OF PLAYERS ARE ONE TEAM MAKE THE OTHERS BE FROM THE OTHER

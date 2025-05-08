@@ -1,19 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CheckCell : MonoBehaviour
+namespace UI.Agent
 {
-    [SerializeField] Image item;
-    [SerializeField] GameObject check;
-
-    public void SetImage(string path)
+    public class CheckCell : MonoBehaviour
     {
-        item.sprite = Resources.Load<Sprite>("ItemsSprites/" + path);
-    }
+        [SerializeField] Image item;
+        [SerializeField] GameObject check;
 
-    public void ToggleCheck(bool state)
-    {
-        check.SetActive(state);
-    }
+        public void SetImage(string path)
+        {
+            item.sprite = Resources.Load<Sprite>("ItemsSprites/" + path);
+        }
 
+        public void ToggleCheck(bool state)
+        {
+            check.SetActive(state);
+        }
+
+    }
 }
