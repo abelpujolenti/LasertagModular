@@ -592,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e31f8bf275a244349d83a1378de49c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _portToListen: 0
+  _portToListen: 3000
   _triesToFindPort: 1000
 --- !u!4 &512883581
 Transform:
@@ -1022,8 +1022,8 @@ MonoBehaviour:
   Char4: {fileID: 1804759344}
   Char5: {fileID: 1459268429}
   Char6: {fileID: 772341020}
-  Char7: {fileID: 0}
-  Char8: {fileID: 0}
+  Char7: {fileID: 1897762890}
+  Char8: {fileID: 1999971025}
   TeamSelect: {fileID: 1181635145}
   PlayerName: {fileID: 1615715427}
 --- !u!1001 &750271411
@@ -3207,6 +3207,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4669965052997670115, guid: d1fb8cf0d0765e046883dfcef64e3c69, type: 3}
   m_PrefabInstance: {fileID: 1897762888}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1897762890 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7062853868930410846, guid: d1fb8cf0d0765e046883dfcef64e3c69, type: 3}
+  m_PrefabInstance: {fileID: 1897762888}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1913024771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3841,6 +3852,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4669965052997670115, guid: d1fb8cf0d0765e046883dfcef64e3c69, type: 3}
   m_PrefabInstance: {fileID: 1999971023}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1999971025 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7062853868930410846, guid: d1fb8cf0d0765e046883dfcef64e3c69, type: 3}
+  m_PrefabInstance: {fileID: 1999971023}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3852396889478353225
 PrefabInstance:
   m_ObjectHideFlags: 0
