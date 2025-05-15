@@ -79,6 +79,8 @@ namespace Network.NetEntities
             SubscribeToSetupMobile(socket);
             SubscribeToSetupVest(socket);
             SubscribeToSetupWeapon(socket);
+            SubscribeToSetupGrenade(socket);
+            SubscribeToSetupCar(socket);
         }
 
         private void UnsubscribeToLobbyPacket(TcpSocket socket)
@@ -117,6 +119,22 @@ namespace Network.NetEntities
         private void SubscribeToSetupWeapon(TcpSocket socket)
         {
             socket.Subscribe(PacketKeys.SETUP_WEAPON, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupGrenade(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_GRENADE, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupCar(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_CAR, (bytes) => 
             {
                 
             });
