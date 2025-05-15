@@ -60,26 +60,26 @@ public class ReadNFC : MonoBehaviour
             var domainName = externalTypeRecord.domainName;
             var domainType = externalTypeRecord.domainType;
 
-            tmp.text += domainType + "." + domainName + ":" + dataValue;
+            tmp.text += domainName + "." + domainType + ":" + dataValue;
 
-            switch (domainName)
+            switch (domainType)
             {
-                case "IP":
+                case "ip":
                     cardInfo.ipAddress = dataValue;
                     break;
-                case "Champion":
+                case "champion":
                     cardInfo.champion = (Champions)int.Parse(dataValue);
                     break;
-                case "GameId":
+                case "gameid":
                     cardInfo.gameId = (ushort)int.Parse(dataValue);
                     break;
-                case "PlayerId":
+                case "playerid":
                     cardInfo.playerId = (ushort)int.Parse(dataValue);
                     break;
-                case "HexColor":
-                    cardInfo.hexColor = dataValue;
+                case "hexcolor":
+                    cardInfo.isB = (ushort)int.Parse(dataValue);
                     break;
-                case "PortToListen":
+                case "porttolisten":
                     cardInfo.portToListen = int.Parse(dataValue);
                     break;
                 default:

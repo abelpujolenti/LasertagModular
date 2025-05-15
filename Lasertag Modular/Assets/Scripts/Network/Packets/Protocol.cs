@@ -37,11 +37,11 @@
         public ushort gameId;
         public ushort playerId;
         public Champions champion;
-        public string hexColor;
+        public ushort isB;
 
         public string Debug()
         {
-            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + champion + ", " + hexColor;
+            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + champion + ", " + isB;
         }
     }
 

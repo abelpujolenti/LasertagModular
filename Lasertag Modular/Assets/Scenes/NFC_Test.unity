@@ -602,6 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50dd4a22ee6f3e45a47167342ab492b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  readModule: {fileID: 1564458961}
 --- !u!4 &1360302682
 Transform:
   m_ObjectHideFlags: 0
@@ -932,6 +933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tmp: {fileID: 378588852}
+  client: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
