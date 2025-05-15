@@ -4,6 +4,7 @@ using System.Net;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //typdef
@@ -107,12 +108,53 @@ namespace Network.NetEntities
         {
             SubscribeToHitResponse();
             SubscribeToHealResponse();
+
+            switch (_cardInformation.character)
+            {
+                case Characters.ENGINEER:
+                    SetupEngineer();
+                    break;
+                case Characters.SCOUT:
+                    SetupScout();
+                    break;
+                case Characters.DEFENDER:
+                    SetupDefender();
+                    break;
+                case Characters.DEMOLISHER:
+                    SetupDemolisher();
+                    break;
+                case Characters.REFLECTOR:
+                    SetupReflector();
+                    break;
+                case Characters.NINJA:
+                    SetupNinja();
+                    break;
+                case Characters.HEALER:
+                    SetupHealer();
+                    break;
+                case Characters.HACKER:
+                    SetupHacker();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void UnsubscribeToInGamePackets()
         {
             _socketWithServer.Unsubscribe(PacketKeys.HIT_RESPONSE);
             _socketWithServer.Unsubscribe(PacketKeys.HEAL);
+        }
+
+        private void SubscribeToSetupCharacterResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_CHARACTER_RESPONSE, (bytes) =>
+            {
+                SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
+
+
+
+            });
         }
 
         private void SubscribeToSetupResponse()
@@ -165,6 +207,22 @@ namespace Network.NetEntities
             });
         }
 
+        private void SubscribeToSetupCar()
+        {
+
+            _socketWithServer.Subscribe(PacketKeys.SETUP_CAR, (bytes) =>
+            {
+                SetupCar setupCar = bytes.ByteArrayToObjectT<SetupCar>();
+
+                GameObject gameObject = new GameObject("CarVideo");
+                VideoReceiver vr = gameObject.AddComponent<VideoReceiver>();
+
+                vr.Connect(IPAddress.Parse(setupCar.ipAddress), setupCar.portToListen);
+
+            });
+
+        }
+
         private void SubscribeToHitResponse()
         {
             _socketWithServer.Subscribe(PacketKeys.HIT_RESPONSE, (bytes) =>
@@ -188,6 +246,46 @@ namespace Network.NetEntities
                 UnsubscribeToInGamePackets();
                 SubscribeToLobbyPackets();
             });
+        }
+
+        private void SetupEngineer()
+        {
+            SubscribeToSetupCar();
+        }
+
+        private void SetupScout()
+        {
+
+        }
+
+        private void SetupDefender()
+        {
+
+        }
+
+        private void SetupDemolisher()
+        {
+
+        }
+
+        private void SetupReflector()
+        {
+
+        }
+
+        private void SetupNinja()
+        {
+
+        }
+
+        private void SetupHealer()
+        {
+
+        }
+
+        private void SetupHacker()
+        {
+
         }
     }
 }

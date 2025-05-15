@@ -9,6 +9,9 @@ public class VideoReceiver : MonoBehaviour
 {
     public RawImage rawImage;
 
+    private IPAddress _address;
+    private int _port;
+
     private Texture2D tex;
     private TcpClient client;
     private NetworkStream stream;
@@ -20,6 +23,12 @@ public class VideoReceiver : MonoBehaviour
     {
         tex = new Texture2D(320, 240, TextureFormat.RGB24, false); // tamaño fijo
         rawImage.texture = tex;
+    }
+
+    public void Connect(IPAddress address, int port)
+    {
+        _address = address;
+        _port = port;
 
         Thread serverThread = new Thread(StartServer);
         serverThread.IsBackground = true;
@@ -30,7 +39,7 @@ public class VideoReceiver : MonoBehaviour
     {
         try
         {
-            TcpListener listener = new TcpListener(IPAddress.Any, 8000);
+            TcpListener listener = new TcpListener(_address, _port);
             listener.Start();
             Debug.Log("Esperando conexión desde Raspberry...");
             client = listener.AcceptTcpClient();

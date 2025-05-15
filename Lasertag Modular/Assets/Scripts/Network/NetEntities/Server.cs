@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Network.Packets;
 using Network.Sockets;
+using Stream;
 using UnityEngine;
 
 namespace Network.NetEntities
@@ -136,7 +138,19 @@ namespace Network.NetEntities
         {
             socket.Subscribe(PacketKeys.SETUP_CAR, (bytes) => 
             {
-                
+                SetupCar setupCar = bytes.ByteArrayToObjectT<SetupCar>();
+
+                IDictionary<byte, TcpSocket> _playerIds = new Dictionary<byte, TcpSocket>();    //TODO: Erase this when real dictionary is created
+
+                foreach (var pair in _playerIds ){
+
+                    if (pair.Key == setupCar.playerId)
+                    {
+                        pair.Value.SendPacket(PacketKeys.SETUP_CAR, setupCar);
+                    }
+
+                }
+
             });
         }
 
