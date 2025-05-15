@@ -1,8 +1,16 @@
 using Interface.Agent;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 namespace UI.Agent
 {
+    public static class ColorExtensions
+    {
+        public static Color ToUnityColor(this string hex) =>
+            ColorUtility.TryParseHtmlString(hex, out var c) ? c : Color.magenta;
+    }
+
     public class Agent : MonoBehaviour, IBaseAgent
     {
         private ushort vestCounter = 0;
@@ -13,12 +21,23 @@ namespace UI.Agent
         CheckCell gunCell;
         CheckCell vestCell;
 
-        [SerializeField] private GameObject gridLayout;
+        [SerializeField] private GameObject _gridLayout;
         [SerializeField] private GameObject _cellPrefab;
 
         [SerializeField] private string _mobilePath;
         [SerializeField] private string _gunPath;
         [SerializeField] private string _vestPath;
+
+        public TMP_Text Name;
+        public TMP_Text Character;
+        public Image TeamBack;
+
+        public void DecorateAgentPanel(string name, string character, bool team)
+        {
+            Name.text = name;
+            Character.text = character;
+            TeamBack.color = (team ? "#E16C80" : "#837DC9").ToUnityColor();
+        }
 
         private void Start()
         {
@@ -50,7 +69,7 @@ namespace UI.Agent
 
         public void AddImageToGrid(GameObject cellGameObject) 
         {
-            cellGameObject.transform.SetParent(gridLayout.transform);
+            cellGameObject.transform.SetParent(_gridLayout.transform);
         }
 
         public void CheckState(byte[] checkState)

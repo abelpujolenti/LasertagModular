@@ -1,5 +1,8 @@
 using Network.Packets;
+using System;
+using System.Security.Cryptography;
 using TMPro;
+using UI.Agent;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -20,26 +23,29 @@ public class ServerScreenHandler : MonoBehaviour
     public Button FiveVS;
 
     [Header("Character Select")]
-    public Button Char1;
-    public Button Char2;
-    public Button Char3;
-    public Button Char4;
-    public Button Char5;
-    public Button Char6;
-    public Button Char7;
-    public Button Char8;
+    public GameObject Char1;
+    public GameObject Char2;
+    public GameObject Char3;
+    public GameObject Char4;
+    public GameObject Char5;
+    public GameObject Char6;
+    public GameObject Char7;
+    public GameObject Char8;
 
     [Header("Team Select")]
     public Toggle TeamSelect; 
+    bool[] teamSelectionList;
+    public HorizontalLayoutGroup AgentsGroup;
 
     [Header("Player Info")]
     public TMP_InputField PlayerName;
+    public GameObject AgentPrefab;
 
     int NormalModeSelected = 0;
-    int playerCounter = 1;
+    int playerCounter = 0;
 
     Characters CurrentCharacterSelected = Characters.NONE;
-    string CurrentTeamSelected;
+    bool CurrentTeamSelected;
     string CurrentPlayerName;
 
     private void Start()
@@ -50,36 +56,43 @@ public class ServerScreenHandler : MonoBehaviour
         PlayersMatchSettings.SetActive(false);
         MatchWaitRoom.SetActive(false);
 
-        TwoVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(4));
-        ThreeVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(6));
-        FourVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(8));
-        FiveVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(10));
+        TwoVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(3));
+        ThreeVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(5));
+        FourVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(7));
+        FiveVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(9));
 
         Char1.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.ENGINEER));
+        Char1.GetComponentInChildren<TMP_Text>().SetText(Characters.ENGINEER.ToString());
         Char2.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.SCOUT));
+        Char2.GetComponentInChildren<TMP_Text>().SetText(Characters.SCOUT.ToString());
         Char3.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEFENDER));
+        Char3.GetComponentInChildren<TMP_Text>().SetText(Characters.DEFENDER.ToString());
         Char4.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEMOLISHER));
+        Char4.GetComponentInChildren<TMP_Text>().SetText(Characters.DEMOLISHER.ToString());
         Char5.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.REFLECTOR));
+        Char5.GetComponentInChildren<TMP_Text>().SetText(Characters.REFLECTOR.ToString());
         Char6.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.NINJA));
+        Char6.GetComponentInChildren<TMP_Text>().SetText(Characters.NINJA.ToString());
         Char7.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HEALER));
+        Char7.GetComponentInChildren<TMP_Text>().SetText(Characters.HEALER.ToString());
         Char8.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HACKER));
+        Char8.GetComponentInChildren<TMP_Text>().SetText(Characters.HACKER.ToString());
     }
 
     private void OnModeSelected(int value)
     {
         NormalModeSelected = value;
-        print(value);
+        teamSelectionList = new bool[value];
     }
 
     private void OnCharacterSelected(Characters enumValue)
     {
         CurrentCharacterSelected = enumValue;
-        print(enumValue);
     }
 
     public void TryCreatePlayer()
     {
-        if(NormalModeSelected == playerCounter)
+        if (NormalModeSelected == playerCounter)
         {
             PlayersMatchSettings.SetActive(false);
             MatchWaitRoom.SetActive(true);
@@ -90,13 +103,23 @@ public class ServerScreenHandler : MonoBehaviour
             {
                 CurrentPlayerName = PlayerName.text;
                 PlayerName.text = "";
-                CurrentCharacterSelected = Characters.NONE;
                 EventSystem.current.SetSelectedGameObject(null);
-                CurrentTeamSelected = TeamSelect.IsActive() ? "B" : "A";
 
-                //TODO: IF HALF OF PLAYERS ARE ONE TEAM MAKE THE OTHERS BE FROM THE OTHER
-                //TODO: GET ALL THIS INFO AND ADD IT TO THE SERVER
+                bool isTeam;
+                if (IsOneTeamFull())
+                {
+                    isTeam = !TeamSelect.isOn;
+                }
+                else
+                {
+                    isTeam = TeamSelect.isOn;
+                }
+
+                CurrentTeamSelected = isTeam;
+                teamSelectionList[playerCounter] = isTeam;
                 playerCounter++;
+
+                AddAgent(CurrentPlayerName, CurrentTeamSelected, CurrentCharacterSelected);
             }
         }
     }
@@ -108,5 +131,41 @@ public class ServerScreenHandler : MonoBehaviour
             NormalModeSettings.SetActive(false);
             PlayersMatchSettings.SetActive(true);
         }
+    }
+
+    bool IsOneTeamFull()
+    {
+        if (playerCounter == 0) return false;
+
+        int teamACount = 0;
+        int teamBCount = 0;
+        for (int i = 0; i < playerCounter; i++)
+        {
+            if (teamSelectionList[i])
+            {
+                teamBCount++;
+            }
+            else
+            {
+                teamACount++;
+            }
+        }
+        int halfPlayers = NormalModeSelected / 2;
+        return teamACount >= halfPlayers || teamBCount >= halfPlayers;
+    }
+
+    //TODO: HACER BINDS DE CREACIÓN DE AGENTES
+    //private Action<Agent> _onCreateAgent;
+
+    public void AddAgent(string name, bool team, Characters character)
+    {
+        GameObject newAgent = Instantiate(AgentPrefab);
+        newAgent.GetComponent<Agent>().DecorateAgentPanel(name, character.ToString(), team);
+
+        //TODO: HACER CALL DE CREAR LOS AGENTES
+        //_onCreateAgent(newAgent.GetComponent<Agent>());
+
+        newAgent.transform.SetParent(AgentsGroup.transform, false);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(AgentsGroup.GetComponent<RectTransform>());
     }
 }
