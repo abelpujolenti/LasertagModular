@@ -33,20 +33,16 @@ public class ServerScreenHandler : MonoBehaviour
     public GameObject Char8;
 
     [Header("Team Select")]
-    public Toggle TeamSelect; 
-    bool[] teamSelectionList;
+    public Toggle TeamSelect;
     public HorizontalLayoutGroup AgentsGroup;
 
     [Header("Player Info")]
     public TMP_InputField PlayerName;
     public GameObject AgentPrefab;
 
-    int NormalModeSelected = 0;
-    int playerCounter = 0;
-
-    Characters CurrentCharacterSelected = Characters.NONE;
-    bool CurrentTeamSelected;
-    string CurrentPlayerName;
+    [Header("Information")]
+    public int NormalModeSelected = 0;
+    public Characters CurrentCharacterSelected = Characters.NONE;
 
     private void Start()
     {
@@ -82,90 +78,10 @@ public class ServerScreenHandler : MonoBehaviour
     private void OnModeSelected(int value)
     {
         NormalModeSelected = value;
-        teamSelectionList = new bool[value];
     }
 
     private void OnCharacterSelected(Characters enumValue)
     {
         CurrentCharacterSelected = enumValue;
-    }
-
-    public void TryCreatePlayer()
-    {
-        if (NormalModeSelected == playerCounter)
-        {
-            PlayersMatchSettings.SetActive(false);
-            MatchWaitRoom.SetActive(true);
-        }
-        else
-        {
-            if (PlayerName.text != "" && CurrentCharacterSelected != Characters.NONE)
-            {
-                CurrentPlayerName = PlayerName.text;
-                PlayerName.text = "";
-                EventSystem.current.SetSelectedGameObject(null);
-
-                bool isTeam;
-                if (IsOneTeamFull())
-                {
-                    isTeam = !TeamSelect.isOn;
-                }
-                else
-                {
-                    isTeam = TeamSelect.isOn;
-                }
-
-                CurrentTeamSelected = isTeam;
-                teamSelectionList[playerCounter] = isTeam;
-                playerCounter++;
-
-                AddAgent(CurrentPlayerName, CurrentTeamSelected, CurrentCharacterSelected);
-            }
-        }
-    }
-
-    public void TryApplyGameMode()
-    {
-        if (NormalModeSelected != 0)
-        {
-            NormalModeSettings.SetActive(false);
-            PlayersMatchSettings.SetActive(true);
-        }
-    }
-
-    bool IsOneTeamFull()
-    {
-        if (playerCounter == 0) return false;
-
-        int teamACount = 0;
-        int teamBCount = 0;
-        for (int i = 0; i < playerCounter; i++)
-        {
-            if (teamSelectionList[i])
-            {
-                teamBCount++;
-            }
-            else
-            {
-                teamACount++;
-            }
-        }
-        int halfPlayers = NormalModeSelected / 2;
-        return teamACount >= halfPlayers || teamBCount >= halfPlayers;
-    }
-
-    //TODO: HACER BINDS DE CREACIÓN DE AGENTES
-    //private Action<Agent> _onCreateAgent;
-
-    public void AddAgent(string name, bool team, Characters character)
-    {
-        GameObject newAgent = Instantiate(AgentPrefab);
-        newAgent.GetComponent<Agent>().DecorateAgentPanel(name, character.ToString(), team);
-
-        //TODO: HACER CALL DE CREAR LOS AGENTES
-        //_onCreateAgent(newAgent.GetComponent<Agent>());
-
-        newAgent.transform.SetParent(AgentsGroup.transform, false);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(AgentsGroup.GetComponent<RectTransform>());
     }
 }
