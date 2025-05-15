@@ -21,7 +21,7 @@ namespace Network.Sockets
 
         private List<TcpSocket> _sockets = new List<TcpSocket>();
 
-        private IPEndPoint _ipEndPoint;
+        public IPEndPoint ipEndPoint;
 
         private bool _isRunning;
 

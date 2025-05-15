@@ -33,6 +33,15 @@
         HACKER
     }
 
+    public enum Equipment : byte
+    {
+        MOBILE = 1,
+        VEST = 2,
+        WEAPON = 4,
+        GRENADE = 8,
+        CAR = 16
+    }
+
     public class CardInformation
     {
         public string ipAddress;
@@ -84,7 +93,7 @@
     public class SetupResponse
     {
         public string playerName;
-        public byte setupResponse;
+        public byte[] setupResponse;
     }
 
     public class CheckedPlayersAmount
