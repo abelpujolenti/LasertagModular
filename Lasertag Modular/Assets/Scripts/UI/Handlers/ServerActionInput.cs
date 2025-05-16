@@ -15,6 +15,8 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryCreatePlayer()
     {
-        //Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.isOn)
+        //Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
+        ScreenHandler.PlayersMatchSettings.SetActive(false);
+        ScreenHandler.WaitingForNFC.SetActive(true);
     }
 }

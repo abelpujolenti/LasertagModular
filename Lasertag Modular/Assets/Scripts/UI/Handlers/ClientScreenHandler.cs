@@ -19,7 +19,7 @@ public class ClientScreenHandler : MonoBehaviour
     [Header("PlayerSetting")]
     public GameObject AgentPrefab;
     public TMP_Text MatchPreparationValue;
-    public Toggle ReadySelect;
+    public MyToggle ReadySelect;
     public GameObject AgentSpace;
 
     private void Start()
