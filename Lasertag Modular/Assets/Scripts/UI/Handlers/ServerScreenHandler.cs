@@ -14,6 +14,7 @@ public class ServerScreenHandler : MonoBehaviour
     public GameObject NormalModeSettings;
     public GameObject CustomModeSettings;
     public GameObject PlayersMatchSettings;
+    public GameObject WaitingForNFC;
     public GameObject MatchWaitRoom;
 
     [Header ("Normal Game Modes")]
@@ -40,6 +41,9 @@ public class ServerScreenHandler : MonoBehaviour
     public TMP_InputField PlayerName;
     public GameObject AgentPrefab;
 
+    [Header("WaitRoom")]
+    public GridLayoutGroup PlayersGrid;
+
     [Header("Information")]
     public int NormalModeSelected = 0;
     public Characters CurrentCharacterSelected = Characters.NONE;
@@ -50,6 +54,7 @@ public class ServerScreenHandler : MonoBehaviour
         NormalModeSettings.SetActive(false);
         CustomModeSettings.SetActive(false);
         PlayersMatchSettings.SetActive(false);
+        WaitingForNFC.SetActive(false);
         MatchWaitRoom.SetActive(false);
 
         TwoVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(3));
