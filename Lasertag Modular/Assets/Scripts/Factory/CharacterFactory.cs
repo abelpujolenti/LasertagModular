@@ -45,6 +45,11 @@ namespace Factory
             };
         }
 
+        public IBaseAgent CreateAgent(Characters character, IBaseAgent agent)
+        {
+            return _agentCreatorFuncs[character](agent);
+        }
+
         private IBaseAgent CreateEngineer(IBaseAgent agent)
         {
             return agent;

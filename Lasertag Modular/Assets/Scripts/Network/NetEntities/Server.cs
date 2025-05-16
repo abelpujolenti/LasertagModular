@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Interface.Agent;
 using Managers;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
-using UI.Agent;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -29,7 +29,7 @@ namespace Network.NetEntities
         private Characters[] _characterTeamA;
         private Characters[] _characterTeamB;
 
-        private Dictionary<byte, Agent> _agents;
+        private Dictionary<byte, IBaseAgent> _agents;
         private Dictionary<byte, byte[]> _agentsChecks;
         private Dictionary<byte, Characters> _characterPerPlayer;
 
@@ -95,7 +95,9 @@ namespace Network.NetEntities
             {
                 return false; // Port is in use
             }
-        }public void SetupMatch(int numberOfPlayers)
+        }
+        
+        public void SetupMatch(int numberOfPlayers)
         {
             _playersId = new byte[numberOfPlayers];
             _characterTeamA = new Characters[numberOfPlayers / 2];
@@ -127,9 +129,9 @@ namespace Network.NetEntities
 
                 _onReadCharacter = () => new CardInformation();
                 
-                _serverActionOutput.AddAgent();
+                _agents[newPlayerId] = _serverActionOutput.SetAgent(character, name, isTeamB);
                 
-                _serverActionOutput.UpdatePlayerMatchSettings();
+                _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
 
                 return cardInformation;
             };

@@ -1,3 +1,4 @@
+using Interface.Agent;
 using Network.NetEntities;
 using Network.Packets;
 using UI.Agent;
@@ -15,15 +16,16 @@ public class ServerActionOutput : MonoBehaviour
         ScreenHandler.PlayersMatchSettings.SetActive(true);
     }
 
-    public void AddAgent() //TODO: Llegará un agent
+    public IBaseAgent SetAgent(Characters character, string name, bool isTeamB)
     {
         /*GameObject newAgent = Instantiate(ScreenHandler.AgentPrefab);
         newAgent.GetComponent<Agent>().DecorateAgentPanel(name, character.ToString(), team);
         newAgent.transform.SetParent(ScreenHandler.AgentsGroup.transform, false);
         LayoutRebuilder.ForceRebuildLayoutImmediate(ScreenHandler.AgentsGroup.GetComponent<RectTransform>());*/
+        return null;
     }
 
-    public void UpdatePlayerMatchSettings() //TODO: Llegarán dos listas de agent
+    public void UpdatePlayerMatchSettings(Characters[] teamA, Characters[] teamB) //TODO: Llegarï¿½n dos listas de agent
     {
         //TODO: Bloquear las clases ya selecionadas
         //TODO: Bloquear el team a "A" o "B"
