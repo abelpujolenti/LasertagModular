@@ -4,6 +4,7 @@ using System.Net;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //typdef
@@ -16,7 +17,7 @@ namespace Network.NetEntities
         [SerializeField] private int _portToListen;
         [SerializeField] private int _triesToFindPort;
 
-        private CardInfo _cardInfo;
+        private CardInformation _cardInformation;
 
         private TcpSocket _socketWithServer;
         
@@ -33,13 +34,15 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
             });
+            
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ipAddress), _portToListen));
         }
         
-        public void ReceiveInformationFromCard(CardInfo cardInfo)
+        public void ReceiveInformationFromCard(CardInformation cardInformation)
         {
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(cardInfo.ipAddress), cardInfo.portToListen));
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(cardInformation.ipAddress), cardInformation.portToListen));
 
-            _cardInfo = cardInfo;
+            _cardInformation = cardInformation;
         }
 
         private void ConnectToServer(IPEndPoint ipEndPoint)
@@ -62,7 +65,7 @@ namespace Network.NetEntities
                     
                     SendSetupMobile();
                     
-                    SubscribeToServerPackets();
+                    SubscribeToLobbyPackets();
                 }
                     
                 _serverSocketManager.StartLoop();
@@ -75,72 +78,94 @@ namespace Network.NetEntities
         {
             SetupMobile setupMobile = new SetupMobile
             {
-                gameId = _cardInfo.gameId,
-                playerId = _cardInfo.playerId,
-                champion = _cardInfo.champion
+                gameId = _cardInformation.gameId,
+                playerId = _cardInformation.playerId,
+                character = _cardInformation.character
             };
             
             _socketWithServer.SendPacket(PacketKeys.SETUP_MOBILE, setupMobile);
         }
 
-        private void SubscribeToServerPackets()
+        private void SubscribeToLobbyPackets()
         {
-            SubscribeToSetupMobileResponse();
-            SubscribeToSetupVestResponse();
-            SubscribeToSetupWeaponResponse();
+            SubscribeToSetupResponse();
             SubscribeToPlayerReadyToPlay();
             SubscribeToCheckedPlayersAmount();
             SubscribeToReadyPlayersAmount();
             SubscribeToStartGame();
         }
 
-        private void SubscribeToSetupMobileResponse()
+        private void UnsubscribeToLobbyPackets()
         {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_MOBILE_RESPONSE, (bytes) =>
-            {
-                SetupMobileResponse setupMobileResponse = bytes.ByteArrayToObjectT<SetupMobileResponse>();
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.PLAYER_READY_TO_PLAY);
+            _socketWithServer.Unsubscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT);
+            _socketWithServer.Unsubscribe(PacketKeys.READY_PLAYERS_AMOUNT);
+            _socketWithServer.Unsubscribe(PacketKeys.START_GAME);
+        }
 
-                if (!setupMobileResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
+        private void SubscribeToInGamePackets()
+        {
+            SubscribeToHitResponse();
+            SubscribeToHealResponse();
+
+            switch (_cardInformation.character)
+            {
+                case Characters.ENGINEER:
+                    SetupEngineer();
+                    break;
+                case Characters.SCOUT:
+                    SetupScout();
+                    break;
+                case Characters.DEFENDER:
+                    SetupDefender();
+                    break;
+                case Characters.DEMOLISHER:
+                    SetupDemolisher();
+                    break;
+                case Characters.REFLECTOR:
+                    SetupReflector();
+                    break;
+                case Characters.NINJA:
+                    SetupNinja();
+                    break;
+                case Characters.HEALER:
+                    SetupHealer();
+                    break;
+                case Characters.HACKER:
+                    SetupHacker();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void UnsubscribeToInGamePackets()
+        {
+            _socketWithServer.Unsubscribe(PacketKeys.HIT_RESPONSE);
+            _socketWithServer.Unsubscribe(PacketKeys.HEAL);
+        }
+
+        private void SubscribeToSetupCharacterResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_CHARACTER_RESPONSE, (bytes) =>
+            {
+                SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
+
+
+
+            });
+        }
+
+        private void SubscribeToSetupResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.SETUP_RESPONSE, (bytes) =>
+            {
+                SetupResponse setupResponse = bytes.ByteArrayToObjectT<SetupResponse>();
                 
                 //TODO PASS PLAYERNAME
                 //TODO PASS IS VEST CHECKED
                 //TODO PASS IS WEAPON CHECKED
-            });
-        }
-
-        private void SubscribeToSetupVestResponse()
-        {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_VEST_RESPONSE, (bytes) =>
-            {
-                SetupVestResponse setupVestResponse = bytes.ByteArrayToObjectT<SetupVestResponse>();
-
-                if (!setupVestResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
-                
-                //TODO PASS IS VEST CHECKED
-            });
-        }
-
-        private void SubscribeToSetupWeaponResponse()
-        {
-            _socketWithServer.Subscribe(PacketKeys.SETUP_WEAPON_RESPONSE, (bytes) =>
-            {
-                SetupWeaponResponse setupWeaponResponse = bytes.ByteArrayToObjectT<SetupWeaponResponse>();
-
-                if (!setupWeaponResponse.isCorrect)
-                {
-                    //TODO ERROR FEEDBACK
-                    return;
-                }
-                
-                //TODO PASS IS VEST CHECKED
             });
         }
 
@@ -177,7 +202,90 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.START_GAME, (bytes) =>
             {
                 //TODO START GAME
+                UnsubscribeToLobbyPackets();
+                SubscribeToInGamePackets();
             });
+        }
+
+        private void SubscribeToSetupCar()
+        {
+
+            _socketWithServer.Subscribe(PacketKeys.SETUP_CAR, (bytes) =>
+            {
+                SetupCar setupCar = bytes.ByteArrayToObjectT<SetupCar>();
+
+                GameObject gameObject = new GameObject("CarVideo");
+                VideoReceiver vr = gameObject.AddComponent<VideoReceiver>();
+
+                vr.Connect(IPAddress.Parse(setupCar.ipAddress), setupCar.portToListen);
+
+            });
+
+        }
+
+        private void SubscribeToHitResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.HIT_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToHealResponse()
+        {
+            _socketWithServer.Subscribe(PacketKeys.HEAL_RESPONSE, (bytes) =>
+            {
+                
+            });
+        }
+
+        private void SubscribeToEndGame()
+        {
+            _socketWithServer.Subscribe(PacketKeys.END_GAME, (bytes) =>
+            {
+                UnsubscribeToInGamePackets();
+                SubscribeToLobbyPackets();
+            });
+        }
+
+        private void SetupEngineer()
+        {
+            SubscribeToSetupCar();
+        }
+
+        private void SetupScout()
+        {
+
+        }
+
+        private void SetupDefender()
+        {
+
+        }
+
+        private void SetupDemolisher()
+        {
+
+        }
+
+        private void SetupReflector()
+        {
+
+        }
+
+        private void SetupNinja()
+        {
+
+        }
+
+        private void SetupHealer()
+        {
+
+        }
+
+        private void SetupHacker()
+        {
+
         }
     }
 }

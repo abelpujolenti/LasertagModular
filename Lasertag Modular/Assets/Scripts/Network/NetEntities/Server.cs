@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using Network.Packets;
 using Network.Sockets;
+using Stream;
 using UnityEngine;
 
 namespace Network.NetEntities
@@ -23,7 +25,7 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
                 
-                SubscribeToClientPackets(socket);
+                SubscribeToLobbyPackets(socket);
             });
 
             _portToListen = FindAvailablePort(_portToListen, _triesToFindPort);
@@ -74,11 +76,30 @@ namespace Network.NetEntities
             }
         }
 
-        private void SubscribeToClientPackets(TcpSocket socket)
+        private void SubscribeToLobbyPackets(TcpSocket socket)
         {
             SubscribeToSetupMobile(socket);
             SubscribeToSetupVest(socket);
             SubscribeToSetupWeapon(socket);
+            SubscribeToSetupGrenade(socket);
+            SubscribeToSetupCar(socket);
+        }
+
+        private void UnsubscribeToLobbyPacket(TcpSocket socket)
+        {
+            socket.Unsubscribe(PacketKeys.SETUP_MOBILE);
+            socket.Unsubscribe(PacketKeys.SETUP_VEST);
+            socket.Unsubscribe(PacketKeys.SETUP_WEAPON);
+        }
+
+        private void SubscribeToInGamePackets(TcpSocket socket)
+        {
+            SubscribeToHit(socket);
+        }
+
+        private void UnsubscribeToInGamePackets(TcpSocket socket)
+        {
+            socket.Unsubscribe(PacketKeys.HIT);
         }
 
         private void SubscribeToSetupMobile(TcpSocket socket)
@@ -100,6 +121,42 @@ namespace Network.NetEntities
         private void SubscribeToSetupWeapon(TcpSocket socket)
         {
             socket.Subscribe(PacketKeys.SETUP_WEAPON, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupGrenade(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_GRENADE, (bytes) => 
+            {
+                
+            });
+        }
+
+        private void SubscribeToSetupCar(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.SETUP_CAR, (bytes) => 
+            {
+                SetupCar setupCar = bytes.ByteArrayToObjectT<SetupCar>();
+
+                IDictionary<byte, TcpSocket> _playerIds = new Dictionary<byte, TcpSocket>();    //TODO: Erase this when real dictionary is created
+
+                foreach (var pair in _playerIds ){
+
+                    if (pair.Key == setupCar.playerId)
+                    {
+                        pair.Value.SendPacket(PacketKeys.SETUP_CAR, setupCar);
+                    }
+
+                }
+
+            });
+        }
+
+        private void SubscribeToHit(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.HIT, (bytes) =>
             {
                 
             });
