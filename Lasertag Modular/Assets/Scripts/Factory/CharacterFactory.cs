@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Interface.Agent;
 using Network.Packets;
-using UI.Agent;
 using UnityEngine;
 
 namespace Factory

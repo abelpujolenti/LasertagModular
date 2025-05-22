@@ -29,6 +29,8 @@ namespace Network.NetEntities
         private Characters[] _characterTeamA;
         private Characters[] _characterTeamB;
 
+        private Dictionary<byte, string> _playersName;
+        private Dictionary<byte, bool> _playersTeam;
         private Dictionary<byte, IBaseAgent> _agents;
         private Dictionary<byte, byte[]> _agentsChecks;
         private Dictionary<byte, Characters> _characterPerPlayer;
@@ -129,7 +131,9 @@ namespace Network.NetEntities
 
                 _onReadCharacter = () => new CardInformation();
                 
-                _agents[newPlayerId] = _serverActionOutput.SetAgent(character, name, isTeamB);
+                _playersName.Add(newPlayerId, name);
+                _playersTeam.Add(newPlayerId, isTeamB);
+                _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
                 
                 _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
 
@@ -191,12 +195,15 @@ namespace Network.NetEntities
             {
                 SetupMobile setupMobile = bytes.ByteArrayToObjectT<SetupMobile>();
                 
-                SetupResponse setupResponse = new SetupResponse
+                SetupCharacterResponse setupResponse = new SetupCharacterResponse
                 {
+                    character = setupMobile.character,
+                    playerName = _playersName[setupMobile.playerId],
+                    isTeamB = _playersTeam[setupMobile.playerId],
                     setupResponse = UpdateCheck(setupMobile.playerId, Equipment.MOBILE)
                 };
                 
-                socket.SendPacket(PacketKeys.SETUP_RESPONSE, setupResponse);
+                socket.SendPacket(PacketKeys.SETUP_CHARACTER_RESPONSE, setupResponse);
             });
         }
 

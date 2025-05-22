@@ -49,7 +49,6 @@
         public byte gameId;
         public byte playerId;
         public Characters character;
-        public string hexColor;
     }
 
     public class SetupMobile
@@ -88,11 +87,13 @@
     public class SetupCharacterResponse
     {
         public Characters character;
+        public string playerName;
+        public bool isTeamB;
+        public byte[] setupResponse;
     }
 
     public class SetupResponse
     {
-        public string playerName;
         public byte[] setupResponse;
     }
 

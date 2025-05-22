@@ -1,9 +1,7 @@
-using Network.Packets;
 using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class MyButton : MonoBehaviour, IPointerClickHandler
 {

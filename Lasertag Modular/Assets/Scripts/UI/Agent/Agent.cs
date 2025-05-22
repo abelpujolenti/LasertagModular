@@ -1,6 +1,6 @@
 using Interface.Agent;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Agent
