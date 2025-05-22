@@ -1,3 +1,4 @@
+using Factory;
 using Interface.Agent;
 using Network.NetEntities;
 using Network.Packets;
@@ -28,15 +29,17 @@ public class ServerActionOutput : MonoBehaviour
         IBaseAgent baseAgent = null;
         if (!isteamB)
         {
-            ScreenHandler.TeamAAgents[teamASlot].DecorateAgentPanel(name, character.ToString(), isteamB);
-            //TODO: rellenar baseAgent
+            Agent agent = ScreenHandler.TeamAAgents[teamASlot];
+            agent.DecorateAgentPanel(name, character.ToString(), isteamB);
+            baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
             ScreenHandler.TeamAAgents[teamASlot].gameObject.SetActive(true);
             teamASlot++;
         }
         else
         {
-            ScreenHandler.TeamBAgents[teamBSlot].DecorateAgentPanel(name, character.ToString(), isteamB);
-            //TODO: rellenar baseAgent
+            Agent agent = ScreenHandler.TeamAAgents[teamBSlot];
+            agent.DecorateAgentPanel(name, character.ToString(), isteamB);
+            baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
             ScreenHandler.TeamAAgents[teamBSlot].gameObject.SetActive(true);
             teamBSlot++;
         }
@@ -54,7 +57,11 @@ public class ServerActionOutput : MonoBehaviour
         {
             ScreenHandler.BlockToggle(true);
         }
-        //TODO next screen in case all players are setted
+        if (!teamB.Contains(Characters.NONE) && !teamB.Contains(Characters.NONE))
+        {
+            ScreenHandler.SwitchToList();
+            ScreenHandler.ListSwitch.gameObject.SetActive(false);
+        }
 
         ScreenHandler.TeamAReceivedList = teamA;
         ScreenHandler.TeamBReceivedList = teamB;
