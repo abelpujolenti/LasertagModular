@@ -1,5 +1,6 @@
 using Network.Packets;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using UI.Agent;
@@ -14,35 +15,35 @@ public class ServerScreenHandler : MonoBehaviour
     public GameObject NormalModeSettings;
     public GameObject CustomModeSettings;
     public GameObject PlayersMatchSettings;
+    public GameObject WaitingForNFC;
     public GameObject MatchWaitRoom;
 
     [Header ("Normal Game Modes")]
-    public Button TwoVS;
-    public Button ThreeVS;
-    public Button FourVS;
-    public Button FiveVS;
+    public MyButton TwoVS;
+    public MyButton ThreeVS;
+    public MyButton FourVS;
+    public MyButton FiveVS;
 
     [Header("Character Select")]
-    public GameObject Char1;
-    public GameObject Char2;
-    public GameObject Char3;
-    public GameObject Char4;
-    public GameObject Char5;
-    public GameObject Char6;
-    public GameObject Char7;
-    public GameObject Char8;
+    [SerializeField] private List<MyButton> _characterButtons;
 
     [Header("Team Select")]
-    public Toggle TeamSelect;
+    public MyToggle TeamSelect;
     public HorizontalLayoutGroup AgentsGroup;
 
     [Header("Player Info")]
     public TMP_InputField PlayerName;
     public GameObject AgentPrefab;
 
+    [Header("WaitRoom")]
+    public List<Agent> TeamAAgents;
+    public List<Agent> TeamBAgents;
+
     [Header("Information")]
     public int NormalModeSelected = 0;
     public Characters CurrentCharacterSelected = Characters.NONE;
+    public Characters[] TeamAReceivedList;
+    public Characters[] TeamBReceivedList;
 
     private void Start()
     {
@@ -50,29 +51,26 @@ public class ServerScreenHandler : MonoBehaviour
         NormalModeSettings.SetActive(false);
         CustomModeSettings.SetActive(false);
         PlayersMatchSettings.SetActive(false);
+        WaitingForNFC.SetActive(false);
         MatchWaitRoom.SetActive(false);
 
-        TwoVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(3));
-        ThreeVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(5));
-        FourVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(7));
-        FiveVS.GetComponent<Button>().onClick.AddListener(() => OnModeSelected(9));
+        TwoVS.SetListener(() => OnModeSelected(3));
+        ThreeVS.SetListener(() => OnModeSelected(5));
+        FourVS.SetListener(() => OnModeSelected(7));
+        FiveVS.SetListener(() => OnModeSelected(9));
 
-        Char1.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.ENGINEER));
-        Char1.GetComponentInChildren<TMP_Text>().SetText(Characters.ENGINEER.ToString());
-        Char2.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.SCOUT));
-        Char2.GetComponentInChildren<TMP_Text>().SetText(Characters.SCOUT.ToString());
-        Char3.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEFENDER));
-        Char3.GetComponentInChildren<TMP_Text>().SetText(Characters.DEFENDER.ToString());
-        Char4.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.DEMOLISHER));
-        Char4.GetComponentInChildren<TMP_Text>().SetText(Characters.DEMOLISHER.ToString());
-        Char5.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.REFLECTOR));
-        Char5.GetComponentInChildren<TMP_Text>().SetText(Characters.REFLECTOR.ToString());
-        Char6.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.NINJA));
-        Char6.GetComponentInChildren<TMP_Text>().SetText(Characters.NINJA.ToString());
-        Char7.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HEALER));
-        Char7.GetComponentInChildren<TMP_Text>().SetText(Characters.HEALER.ToString());
-        Char8.GetComponent<Button>().onClick.AddListener(() => OnCharacterSelected(Characters.HACKER));
-        Char8.GetComponentInChildren<TMP_Text>().SetText(Characters.HACKER.ToString());
+        for (int i = 0; i < _characterButtons.Count; i++)
+        {
+            _characterButtons[i].SetListener(() => OnCharacterSelected((Characters)i + 1));
+            _characterButtons[i].SetText(((Characters)i + 1).ToString());
+        }
+
+        TeamSelect.SetAction(UpdateCharacterButtons);
+    }
+
+    public void BlockToggle(bool isTeamB) 
+    {
+        TeamSelect.SetIsClickable(false, isTeamB);
     }
 
     private void OnModeSelected(int value)
@@ -83,5 +81,40 @@ public class ServerScreenHandler : MonoBehaviour
     private void OnCharacterSelected(Characters enumValue)
     {
         CurrentCharacterSelected = enumValue;
+    }
+
+    public void UpdateCharacterButtons()
+    {
+        foreach (MyButton button in _characterButtons)
+        {
+            button.SetIsClickable(true);
+        }
+
+        if (TeamSelect.GetIsOn())
+        {
+            foreach(Characters charBtn in TeamBReceivedList)
+            {
+                DisableCharactersButton(charBtn);
+            }
+        }
+        else
+        {
+            foreach (Characters charBtn in TeamAReceivedList)
+            {
+                DisableCharactersButton(charBtn);
+            }
+        }
+    }
+
+    private void DisableCharactersButton(Characters character)
+    {
+        for (int i = 0; i < _characterButtons.Count; ++i)
+        {
+            if ((int)character != i + 1)
+            {
+                continue;
+            }
+            _characterButtons[i].SetIsClickable(false);
+        }
     }
 }
