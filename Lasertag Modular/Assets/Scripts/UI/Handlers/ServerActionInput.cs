@@ -8,12 +8,12 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryApplyGameMode()
     {
-        //Server.SetupMatch(ScreenHandler.NormalModeSelected);
+        Server.SetupMatch(ScreenHandler.NormalModeSelected);
     }
 
     public void TryCreatePlayer()
     {
-        //Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
+        Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
         ScreenHandler.PlayersMatchSettings.SetActive(false);
         ScreenHandler.WaitingForNFC.SetActive(true);
     }

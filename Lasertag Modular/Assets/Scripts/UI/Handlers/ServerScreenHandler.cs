@@ -42,6 +42,10 @@ public class ServerScreenHandler : MonoBehaviour
     public Characters[] TeamAReceivedList;
     public Characters[] TeamBReceivedList;
 
+    [Header("Switches")]
+    public Button CreationSwitch;
+    public Button ListSwitch;
+
     private void Start()
     {
         InitialModeSelection.SetActive(true);
@@ -63,6 +67,9 @@ public class ServerScreenHandler : MonoBehaviour
         }
 
         TeamSelect.SetAction(UpdateCharacterButtons);
+
+        CreationSwitch.onClick.AddListener(() => SwitchToList());
+        ListSwitch.onClick.AddListener(() => SwitchToCreation());
     }
 
     public void BlockToggle(bool isTeamB) 
@@ -113,5 +120,17 @@ public class ServerScreenHandler : MonoBehaviour
             }
             _characterButtons[i].SetIsClickable(false);
         }
+    }
+
+    public void SwitchToCreation()
+    {
+        PlayersMatchSettings.SetActive(true);
+        MatchWaitRoom.SetActive(false);
+    }
+
+    public void SwitchToList()
+    {
+        PlayersMatchSettings.SetActive(false);
+        MatchWaitRoom.SetActive(true);
     }
 }
