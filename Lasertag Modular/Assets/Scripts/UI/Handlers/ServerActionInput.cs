@@ -8,9 +8,7 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryConnectSever()
     {
-        //ScreenHandler.SSID.text
-        //ScreenHandler.Password.text
-        //Server.SetWiFi()
+        Server.SetWiFi(ScreenHandler.SSID.text, ScreenHandler.Password.text);
     }
 
     public void TryApplyGameMode()

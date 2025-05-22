@@ -1,4 +1,4 @@
-﻿namespace Network.Packets
+namespace Network.Packets
 {
     public enum PacketKeys : byte
     {
@@ -40,6 +40,12 @@
         WEAPON = 4,
         GRENADE = 8,
         CAR = 16
+    }
+
+    public class CardWriteInformation : CardInformation
+    {
+        public string wifi;
+        public string password;
     }
 
     public class CardInformation
