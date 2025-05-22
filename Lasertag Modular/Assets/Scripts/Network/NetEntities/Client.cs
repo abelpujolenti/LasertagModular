@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
-using Unity.VisualScripting;
+using UI.Agent;
 using UnityEngine;
 
 //typdef
@@ -16,6 +16,8 @@ namespace Network.NetEntities
         [SerializeField] private string _ipAddress;
         [SerializeField] private int _portToListen;
         [SerializeField] private int _triesToFindPort;
+
+        [SerializeField] private Agent _agent;
 
         private CardInformation _cardInformation;
 
@@ -163,9 +165,7 @@ namespace Network.NetEntities
             {
                 SetupResponse setupResponse = bytes.ByteArrayToObjectT<SetupResponse>();
                 
-                //TODO PASS PLAYERNAME
-                //TODO PASS IS VEST CHECKED
-                //TODO PASS IS WEAPON CHECKED
+                _agent.CheckState(setupResponse.setupResponse);
             });
         }
 
