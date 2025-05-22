@@ -2,6 +2,7 @@ using System.Linq;
 using Factory;
 using Interface.Agent;
 using Network.Packets;
+using UI.Agent;
 using UnityEngine;
 
 public class ServerActionOutput : MonoBehaviour
