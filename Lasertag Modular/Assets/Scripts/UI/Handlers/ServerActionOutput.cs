@@ -1,6 +1,8 @@
 using Interface.Agent;
 using Network.NetEntities;
 using Network.Packets;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using UI.Agent;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,6 +11,8 @@ using UnityEngine.UI;
 public class ServerActionOutput : MonoBehaviour
 {
     public ServerScreenHandler ScreenHandler;
+    int teamASlot = 0;
+    int teamBSlot = 0;
 
     public void MatchSetupped()
     {
@@ -16,18 +20,44 @@ public class ServerActionOutput : MonoBehaviour
         ScreenHandler.PlayersMatchSettings.SetActive(true);
     }
 
-    public IBaseAgent SetAgent(Characters character, string name, bool isTeamB)
+    public IBaseAgent SetAgent(Characters character, string name, bool isteamB)
     {
-        /*GameObject newAgent = Instantiate(ScreenHandler.AgentPrefab);
-        newAgent.GetComponent<Agent>().DecorateAgentPanel(name, character.ToString(), team);
-        newAgent.transform.SetParent(ScreenHandler.AgentsGroup.transform, false);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(ScreenHandler.AgentsGroup.GetComponent<RectTransform>());*/
-        return null;
+        ScreenHandler.WaitingForNFC.SetActive(false);
+        ScreenHandler.PlayersMatchSettings.SetActive(true);
+
+        IBaseAgent baseAgent = null;
+        if (!isteamB)
+        {
+            ScreenHandler.TeamAAgents[teamASlot].DecorateAgentPanel(name, character.ToString(), isteamB);
+            //TODO: rellenar baseAgent
+            ScreenHandler.TeamAAgents[teamASlot].gameObject.SetActive(true);
+            teamASlot++;
+        }
+        else
+        {
+            ScreenHandler.TeamBAgents[teamBSlot].DecorateAgentPanel(name, character.ToString(), isteamB);
+            //TODO: rellenar baseAgent
+            ScreenHandler.TeamAAgents[teamBSlot].gameObject.SetActive(true);
+            teamBSlot++;
+        }
+
+        return baseAgent;
     }
 
-    public void UpdatePlayerMatchSettings(Characters[] teamA, Characters[] teamB) //TODO: Llegar�n dos listas de agent
+    public void UpdatePlayerMatchSettings(Characters[] teamA, Characters[] teamB)
     {
-        //TODO: Bloquear las clases ya selecionadas
-        //TODO: Bloquear el team a "A" o "B"
+        if (teamA.Contains(Characters.NONE))
+        {
+            ScreenHandler.BlockToggle(false);
+        }
+        if (teamB.Contains(Characters.NONE))
+        {
+            ScreenHandler.BlockToggle(true);
+        }
+        //TODO next screen in case all players are setted
+
+        ScreenHandler.TeamAReceivedList = teamA;
+        ScreenHandler.TeamBReceivedList = teamB;
+        ScreenHandler.UpdateCharacterButtons();
     }
 }
