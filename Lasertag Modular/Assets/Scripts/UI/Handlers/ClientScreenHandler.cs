@@ -1,11 +1,5 @@
-using Network.Packets;
-using System;
-using System.Security.Cryptography;
 using TMPro;
-using UI.Agent;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ClientScreenHandler : MonoBehaviour
 {

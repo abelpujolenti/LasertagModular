@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using Interface.Agent;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
-using UI.Agent;
 using UnityEngine;
 
 //typdef
@@ -13,17 +13,19 @@ namespace Network.NetEntities
 {
     public class Client : MonoBehaviour
     {
+        [SerializeField] private ClientActionOutput _clientActionOutput;
+        
         [SerializeField] private string _ipAddress;
         [SerializeField] private int _portToListen;
         [SerializeField] private int _triesToFindPort;
-
-        [SerializeField] private Agent _agent;
 
         private CardInformation _cardInformation;
 
         private TcpSocket _socketWithServer;
         
         private SocketManager _serverSocketManager;
+
+        private IBaseAgent _agent;
 
         private void Start()
         {
@@ -90,6 +92,7 @@ namespace Network.NetEntities
 
         private void SubscribeToLobbyPackets()
         {
+            SubscribeToSetupCharacterResponse();
             SubscribeToSetupResponse();
             SubscribeToPlayerReadyToPlay();
             SubscribeToCheckedPlayersAmount();
@@ -99,6 +102,7 @@ namespace Network.NetEntities
 
         private void UnsubscribeToLobbyPackets()
         {
+            _socketWithServer.Unsubscribe(PacketKeys.SETUP_CHARACTER_RESPONSE);
             _socketWithServer.Unsubscribe(PacketKeys.SETUP_RESPONSE);
             _socketWithServer.Unsubscribe(PacketKeys.PLAYER_READY_TO_PLAY);
             _socketWithServer.Unsubscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT);
@@ -154,8 +158,7 @@ namespace Network.NetEntities
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
 
-
-
+                //_clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
 
@@ -182,8 +185,8 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT, (bytes) =>
             {
                 CheckedPlayersAmount checkedPlayersAmount = bytes.ByteArrayToObjectT<CheckedPlayersAmount>();
-                
-                //TODO PASS CHECKED PLAYERS AMOUNT
+
+                //_clientActionOutput.UpdateCheckedPlayers(checkedPlayersAmount.checkedPlayersAmount);
             });
         }
 
@@ -192,8 +195,8 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.READY_PLAYERS_AMOUNT, (bytes) =>
             {
                 ReadyPlayersAmount readyPlayersAmount = bytes.ByteArrayToObjectT<ReadyPlayersAmount>();
-
-                //TODO PASS READY PLAYERS AMOUNT
+                
+                //_clientActionOutput.UpdateAllPlayers(readyPlayersAmount.readyPlayersAmount);
             });
         }
 

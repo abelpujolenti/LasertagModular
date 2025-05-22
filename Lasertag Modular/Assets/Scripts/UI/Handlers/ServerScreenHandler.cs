@@ -1,11 +1,8 @@
-using Network.Packets;
-using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using Network.Packets;
 using TMPro;
 using UI.Agent;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ServerScreenHandler : MonoBehaviour

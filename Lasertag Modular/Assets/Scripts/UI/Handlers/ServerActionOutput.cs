@@ -1,12 +1,7 @@
-using Interface.Agent;
-using Network.NetEntities;
-using Network.Packets;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using UI.Agent;
+using Interface.Agent;
+using Network.Packets;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ServerActionOutput : MonoBehaviour
 {

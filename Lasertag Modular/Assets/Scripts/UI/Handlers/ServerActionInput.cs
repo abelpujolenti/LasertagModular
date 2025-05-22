@@ -1,7 +1,5 @@
 using Network.NetEntities;
-using Network.Packets;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class ServerActionInput : MonoBehaviour
 {
