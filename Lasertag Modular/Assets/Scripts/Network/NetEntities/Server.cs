@@ -16,13 +16,16 @@ namespace Network.NetEntities
     public class Server : MonoBehaviour
     {
         [SerializeField] private ServerActionOutput _serverActionOutput;
+
+        private string _ssid;
+        private string _password;
         
         private int _portToListen = 3000;
         private SocketManager _serverSocketManager;
         
         private Func<CardInformation> _onReadCharacter;
 
-        private byte _gameId;
+        private int _gameId;
 
         private byte[] _playersId;
         
@@ -50,7 +53,6 @@ namespace Network.NetEntities
             });
 
             _portToListen = FindAvailablePort(_portToListen);
-
             
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
@@ -69,7 +71,7 @@ namespace Network.NetEntities
                 }
             }
             
-            _gameId = (byte)Random.Range(0, Byte.MaxValue);
+            _gameId = Random.Range(0, Int32.MaxValue);
         }
         
         private int FindAvailablePort(int startPort)
@@ -98,7 +100,14 @@ namespace Network.NetEntities
                 return false; // Port is in use
             }
         }
-        
+
+        public void SetWiFi(string ssid, string password)
+        {
+            _ssid = ssid;
+            _password = password;
+            _serverActionOutput.ConnectionSettuped();
+        }
+
         public void SetupMatch(int numberOfPlayers)
         {
             _playersId = new byte[numberOfPlayers];
