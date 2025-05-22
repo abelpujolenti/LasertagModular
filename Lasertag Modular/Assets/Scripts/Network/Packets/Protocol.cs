@@ -46,39 +46,44 @@
     {
         public string ipAddress;
         public int portToListen;
-        public byte gameId;
+        public byte isTeamB;
+        public int gameId;
         public byte playerId;
         public Characters character;
+        public string Debug()
+        {
+            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + character + ", " + isTeamB;
+        }
     }
 
     public class SetupMobile
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
         public Characters character;
     }
 
     public class SetupVest
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupWeapon
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupGrenade
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupCar
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
         public string ipAddress;
         public int portToListen;
