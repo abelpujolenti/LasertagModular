@@ -1,25 +1,28 @@
 ﻿namespace Network.Packets
 {
-    public enum PacketKeys : ushort
+    public enum PacketKeys : byte
     {
         SETUP_MOBILE = 0,
-        SETUP_MOBILE_RESPONSE = 1,
-        SETUP_VEST = 2,
-        SETUP_VEST_RESPONSE = 3,
-        SETUP_WEAPON = 4,
-        SETUP_WEAPON_RESPONSE = 5,
-        PLAYER_READY_TO_PLAY = 6,
-        CHECKED_PLAYERS_AMOUNT = 7,
-        READY_PLAYERS_AMOUNT = 8,
-        START_GAME = 9,
-        HIT = 10,
-        HIT_RESPONSE = 11,
-        HEAL = 12,
-        END_GAME = 20,
+        SETUP_VEST = 1,
+        SETUP_WEAPON = 2,
+        SETUP_GRENADE = 3,
+        SETUP_CAR = 4,
+        SETUP_CHARACTER_RESPONSE = 5,
+        SETUP_RESPONSE = 6,
+        PLAYER_READY_TO_PLAY = 7,
+        CHECKED_PLAYERS_AMOUNT = 8,
+        READY_PLAYERS_AMOUNT = 9,
+        START_GAME = 10,
+        HIT = 11,
+        HIT_RESPONSE = 12,
+        HEAL = 13,
+        HEAL_RESPONSE = 14,
+        END_GAME = 20
     }
 
-    public enum Champions : ushort
+    public enum Characters : byte
     {
+        NONE,
         ENGINEER,
         SCOUT,
         DEFENDER,
@@ -30,85 +33,106 @@
         HACKER
     }
 
-    public class CardInfo
+    public enum Equipment : byte
+    {
+        MOBILE = 1,
+        VEST = 2,
+        WEAPON = 4,
+        GRENADE = 8,
+        CAR = 16
+    }
+
+    public class CardInformation
     {
         public string ipAddress;
         public int portToListen;
-        public ushort gameId;
-        public ushort playerId;
-        public Champions champion;
-        public ushort isB;
-
+        public byte isTeamB;
+        public byte gameId;
+        public byte playerId;
         public string Debug()
+        public Characters character;
         {
-            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + champion + ", " + isB;
+            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + character + ", " + isTeamB;
         }
     }
 
     public class SetupMobile
     {
-        public ushort gameId;
-        public ushort playerId;
-        public Champions champion;
-    }
-
-    public class SetupMobileResponse
-    {
-        public bool isCorrect;
-        public string playerName;
-        public bool isVestChecked;
-        public bool isWeaponChecked;
+        public byte gameId;
+        public byte playerId;
+        public Characters character;
     }
 
     public class SetupVest
     {
-        public ushort gameId;
-        public ushort playerId;
-    }
-
-    public class SetupVestResponse
-    {
-        public bool isCorrect;
+        public byte gameId;
+        public byte playerId;
     }
 
     public class SetupWeapon
     {
-        public ushort gameId;
-        public ushort playerId;
+        public byte gameId;
+        public byte playerId;
     }
 
-    public class SetupWeaponResponse
+    public class SetupGrenade
     {
-        public bool isCorrect;
+        public byte gameId;
+        public byte playerId;
+    }
+
+    public class SetupCar
+    {
+        public byte gameId;
+        public byte playerId;
+        public string ipAddress;
+        public int portToListen;
+    }
+
+    public class SetupCharacterResponse
+    {
+        public Characters character;
+        public string playerName;
+        public bool isTeamB;
+        public byte[] setupResponse;
+    }
+
+    public class SetupResponse
+    {
+        public byte[] setupResponse;
     }
 
     public class CheckedPlayersAmount
     {
-        public ushort checkedPlayersAmount;
+        public byte checkedPlayersAmount;
     }
 
     public class ReadyPlayersAmount
     {
-        public ushort readyPlayersAmount;
+        public byte readyPlayersAmount;
     }
 
     public class Hit
     {
-        
+        public byte device;
+        public byte player;
+        public byte zone;
     }
 
     public class HitResponse
     {
-        
+        public byte currentLives;
+        public byte zone;
     }
 
     public class Heal
     {
-        
+        public byte healAmount;
+        public byte player;
     }
 
-    public class EndGame
+    public class HealResponse
     {
-        
+        public byte currentLife;
     }
 }

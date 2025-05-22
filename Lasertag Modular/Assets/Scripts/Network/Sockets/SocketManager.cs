@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using UnityEngine;
-
 //typedefs
 using OnSocketConnected = System.Action<Network.Sockets.TcpSocket>;
 
@@ -23,7 +21,7 @@ namespace Network.Sockets
 
         private List<TcpSocket> _sockets = new List<TcpSocket>();
 
-        private IPEndPoint _ipEndPoint;
+        public IPEndPoint ipEndPoint;
 
         private bool _isRunning;
 
@@ -135,7 +133,7 @@ namespace Network.Sockets
             {
                 if (socket.HasDataToRead())
                 {
-                    UnityEngine.Debug.Log("RECEIVED PACKET WITH SOMETHING");
+                    Debug.Log("RECEIVED PACKET WITH SOMETHING");
                     socket.ReceivePacket();
                 }
             }
