@@ -8,12 +8,17 @@ using UnityEngine.UI;
 public class ServerScreenHandler : MonoBehaviour
 {
     [Header("General")]
+    public GameObject ServerConnectionSetting;
     public GameObject InitialModeSelection;
     public GameObject NormalModeSettings;
     public GameObject CustomModeSettings;
     public GameObject PlayersMatchSettings;
     public GameObject WaitingForNFC;
     public GameObject MatchWaitRoom;
+
+    [Header("Server Connection Setting")]
+    public TMP_InputField SSID;
+    public TMP_InputField Password;
 
     [Header ("Normal Game Modes")]
     public MyButton TwoVS;
@@ -48,7 +53,8 @@ public class ServerScreenHandler : MonoBehaviour
 
     private void Start()
     {
-        InitialModeSelection.SetActive(true);
+        ServerConnectionSetting.SetActive(true);
+        InitialModeSelection.SetActive(false);
         NormalModeSettings.SetActive(false);
         CustomModeSettings.SetActive(false);
         PlayersMatchSettings.SetActive(false);

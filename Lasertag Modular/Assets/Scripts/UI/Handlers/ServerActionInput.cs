@@ -6,6 +6,13 @@ public class ServerActionInput : MonoBehaviour
     public ServerScreenHandler ScreenHandler;
     public Server Server;
 
+    public void TryConnectSever()
+    {
+        //ScreenHandler.SSID.text
+        //ScreenHandler.Password.text
+        //Server.SetWiFi()
+    }
+
     public void TryApplyGameMode()
     {
         Server.SetupMatch(ScreenHandler.NormalModeSelected);
