@@ -158,7 +158,7 @@ namespace Network.NetEntities
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
 
-                //_clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
+                _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
 
@@ -186,7 +186,7 @@ namespace Network.NetEntities
             {
                 CheckedPlayersAmount checkedPlayersAmount = bytes.ByteArrayToObjectT<CheckedPlayersAmount>();
 
-                //_clientActionOutput.UpdateCheckedPlayers(checkedPlayersAmount.checkedPlayersAmount);
+                _clientActionOutput.UpdateConfirmedPlayers(checkedPlayersAmount.checkedPlayersAmount);
             });
         }
 
@@ -196,7 +196,7 @@ namespace Network.NetEntities
             {
                 ReadyPlayersAmount readyPlayersAmount = bytes.ByteArrayToObjectT<ReadyPlayersAmount>();
                 
-                //_clientActionOutput.UpdateAllPlayers(readyPlayersAmount.readyPlayersAmount);
+                _clientActionOutput.UpdateAllPlayers(readyPlayersAmount.readyPlayersAmount);
             });
         }
 
