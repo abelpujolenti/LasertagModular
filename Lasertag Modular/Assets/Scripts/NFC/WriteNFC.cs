@@ -21,12 +21,12 @@ public class WriteNFC : MonoBehaviour
 
     public void AddRecord()
     {
-        Network.Packets.CardInfo cardInfo = new Network.Packets.CardInfo();
+        Network.Packets.CardInformation cardInfo = new Network.Packets.CardInformation();
         cardInfo.ipAddress = "192.168.1.1";
-        cardInfo.champion = Network.Packets.Champions.DEMOLISHER;
+        cardInfo.character = Network.Packets.Characters.DEMOLISHER;
         cardInfo.playerId = 1;
         cardInfo.gameId = 2711;
-        cardInfo.isB = 1;
+        cardInfo.isTeamB = 1;
         cardInfo.portToListen = 25565;
 
         if (pendingMessage == null)
@@ -38,13 +38,13 @@ public class WriteNFC : MonoBehaviour
 
         record = new ExternalTypeRecord(domainType, "ip", Encoding.UTF8.GetBytes(cardInfo.ipAddress));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "champion", Encoding.UTF8.GetBytes(((int)(cardInfo.champion)).ToString()));
+        record = new ExternalTypeRecord(domainType, "champion", Encoding.UTF8.GetBytes(((int)(cardInfo.character)).ToString()));
         pendingMessage.Records.Add(record);
         record = new ExternalTypeRecord(domainType, "gameid", Encoding.UTF8.GetBytes(cardInfo.gameId.ToString()));
         pendingMessage.Records.Add(record);
         record = new ExternalTypeRecord(domainType, "playerid", Encoding.UTF8.GetBytes(cardInfo.playerId.ToString()));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "isb", Encoding.UTF8.GetBytes(cardInfo.isB.ToString()));
+        record = new ExternalTypeRecord(domainType, "isb", Encoding.UTF8.GetBytes(cardInfo.isTeamB.ToString()));
         pendingMessage.Records.Add(record);
         record = new ExternalTypeRecord(domainType, "porttolisten", Encoding.UTF8.GetBytes(cardInfo.portToListen.ToString()));
         pendingMessage.Records.Add(record);

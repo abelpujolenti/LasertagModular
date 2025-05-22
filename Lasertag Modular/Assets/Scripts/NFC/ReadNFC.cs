@@ -47,7 +47,7 @@ public class ReadNFC : MonoBehaviour
     {
         List<NDEFRecord> records = message.Records;
 
-        CardInfo cardInfo = new CardInfo();
+        CardInformation cardInfo = new CardInformation();
 
         int length = records.Count;
         for (int i = 0; i < length; i++)
@@ -68,16 +68,16 @@ public class ReadNFC : MonoBehaviour
                     cardInfo.ipAddress = dataValue;
                     break;
                 case "champion":
-                    cardInfo.champion = (Champions)int.Parse(dataValue);
+                    cardInfo.character = (Characters)int.Parse(dataValue);
                     break;
                 case "gameid":
-                    cardInfo.gameId = (ushort)int.Parse(dataValue);
+                    cardInfo.gameId = int.Parse(dataValue);
                     break;
                 case "playerid":
-                    cardInfo.playerId = (ushort)int.Parse(dataValue);
+                    cardInfo.playerId = byte.Parse(dataValue);
                     break;
                 case "hexcolor":
-                    cardInfo.isB = (ushort)int.Parse(dataValue);
+                    cardInfo.isTeamB = byte.Parse(dataValue);
                     break;
                 case "porttolisten":
                     cardInfo.portToListen = int.Parse(dataValue);

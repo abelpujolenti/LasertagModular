@@ -47,10 +47,10 @@
         public string ipAddress;
         public int portToListen;
         public byte isTeamB;
-        public byte gameId;
+        public int gameId;
         public byte playerId;
-        public string Debug()
         public Characters character;
+        public string Debug()
         {
             return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + character + ", " + isTeamB;
         }
