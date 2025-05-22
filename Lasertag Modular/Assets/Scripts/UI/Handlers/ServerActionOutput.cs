@@ -11,6 +11,12 @@ public class ServerActionOutput : MonoBehaviour
     int teamASlot = 0;
     int teamBSlot = 0;
 
+    public void ConnectionSettuped()
+    {
+        ScreenHandler.ServerConnectionSetting.SetActive(false);
+        ScreenHandler.InitialModeSelection.SetActive(true);
+    }
+
     public void MatchSetupped()
     {
         ScreenHandler.NormalModeSettings.SetActive(false);
