@@ -1,13 +1,21 @@
-using Network.NetEntities;
+using System.Linq;
+using Factory;
+using Interface.Agent;
 using Network.Packets;
 using UI.Agent;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ServerActionOutput : MonoBehaviour
 {
     public ServerScreenHandler ScreenHandler;
+    int teamASlot = 0;
+    int teamBSlot = 0;
+
+    public void ConnectionSettuped()
+    {
+        ScreenHandler.ServerConnectionSetting.SetActive(false);
+        ScreenHandler.InitialModeSelection.SetActive(true);
+    }
 
     public void MatchSetupped()
     {
@@ -15,17 +23,50 @@ public class ServerActionOutput : MonoBehaviour
         ScreenHandler.PlayersMatchSettings.SetActive(true);
     }
 
-    public void AddAgent() //TODO: Llegará un agent
+    public IBaseAgent SetAgent(Characters character, string name, bool isteamB)
     {
-        /*GameObject newAgent = Instantiate(ScreenHandler.AgentPrefab);
-        newAgent.GetComponent<Agent>().DecorateAgentPanel(name, character.ToString(), team);
-        newAgent.transform.SetParent(ScreenHandler.AgentsGroup.transform, false);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(ScreenHandler.AgentsGroup.GetComponent<RectTransform>());*/
+        ScreenHandler.WaitingForNFC.SetActive(false);
+        ScreenHandler.PlayersMatchSettings.SetActive(true);
+
+        IBaseAgent baseAgent = null;
+        if (!isteamB)
+        {
+            Agent agent = ScreenHandler.TeamAAgents[teamASlot];
+            agent.DecorateAgentPanel(name, character.ToString(), isteamB);
+            baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
+            ScreenHandler.TeamAAgents[teamASlot].gameObject.SetActive(true);
+            teamASlot++;
+        }
+        else
+        {
+            Agent agent = ScreenHandler.TeamAAgents[teamBSlot];
+            agent.DecorateAgentPanel(name, character.ToString(), isteamB);
+            baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
+            ScreenHandler.TeamAAgents[teamBSlot].gameObject.SetActive(true);
+            teamBSlot++;
+        }
+
+        return baseAgent;
     }
 
-    public void UpdatePlayerMatchSettings() //TODO: Llegarán dos listas de agent
+    public void UpdatePlayerMatchSettings(Characters[] teamA, Characters[] teamB)
     {
-        //TODO: Bloquear las clases ya selecionadas
-        //TODO: Bloquear el team a "A" o "B"
+        if (teamA.Contains(Characters.NONE))
+        {
+            ScreenHandler.BlockToggle(false);
+        }
+        if (teamB.Contains(Characters.NONE))
+        {
+            ScreenHandler.BlockToggle(true);
+        }
+        if (!teamB.Contains(Characters.NONE) && !teamB.Contains(Characters.NONE))
+        {
+            ScreenHandler.SwitchToList();
+            ScreenHandler.ListSwitch.gameObject.SetActive(false);
+        }
+
+        ScreenHandler.TeamAReceivedList = teamA;
+        ScreenHandler.TeamBReceivedList = teamB;
+        ScreenHandler.UpdateCharacterButtons();
     }
 }

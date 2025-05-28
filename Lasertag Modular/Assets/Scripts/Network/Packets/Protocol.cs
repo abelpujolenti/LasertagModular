@@ -1,4 +1,4 @@
-﻿namespace Network.Packets
+namespace Network.Packets
 {
     public enum PacketKeys : byte
     {
@@ -33,44 +33,63 @@
         HACKER
     }
 
+    public enum Equipment : byte
+    {
+        MOBILE = 1,
+        VEST = 2,
+        WEAPON = 4,
+        GRENADE = 8,
+        CAR = 16
+    }
+
+    public class CardWriteInformation : CardInformation
+    {
+        public string wifi;
+        public string password;
+    }
+
     public class CardInformation
     {
         public string ipAddress;
         public int portToListen;
-        public byte gameId;
+        public byte isTeamB;
+        public int gameId;
         public byte playerId;
         public Characters character;
-        public string hexColor;
+        public string Debug()
+        {
+            return ipAddress + ", " + portToListen + ", " + gameId + ", " + playerId + ", " + character + ", " + isTeamB;
+        }
     }
 
     public class SetupMobile
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
         public Characters character;
     }
 
     public class SetupVest
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupWeapon
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupGrenade
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
     }
 
     public class SetupCar
     {
-        public byte gameId;
+        public int gameId;
         public byte playerId;
         public string ipAddress;
         public int portToListen;
@@ -79,12 +98,14 @@
     public class SetupCharacterResponse
     {
         public Characters character;
+        public string playerName;
+        public bool isTeamB;
+        public byte[] setupResponse;
     }
 
     public class SetupResponse
     {
-        public string playerName;
-        public byte setupResponse;
+        public byte[] setupResponse;
     }
 
     public class CheckedPlayersAmount
