@@ -15,9 +15,9 @@ namespace Network.NetEntities
     {
         [SerializeField] private ClientActionOutput _clientActionOutput;
         
-        [SerializeField] private string _ipAddress;
-        [SerializeField] private int _portToListen;
-        [SerializeField] private int _triesToFindPort;
+        private string _ipAddress;
+        private int _portToListen;
+        private int _triesToFindPort = 1000;
 
         private CardInformation _cardInformation;
 
@@ -38,8 +38,6 @@ namespace Network.NetEntities
                     Debug.Log("Socket Disconnected: " + socketDisconnected.GetRemoteAddress());
                 });
             });
-            
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ipAddress), _portToListen));
         }
         
         public void ReceiveInformationFromCard(CardInformation cardInformation)
