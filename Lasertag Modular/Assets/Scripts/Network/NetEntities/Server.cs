@@ -8,6 +8,7 @@ using Managers;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -34,6 +35,7 @@ namespace Network.NetEntities
 
         private Dictionary<byte, string> _playersName;
         private Dictionary<byte, bool> _playersTeam;
+        private Dictionary<byte, PlayerManager> _playerInfo;
         private Dictionary<byte, IBaseAgent> _agents;
         private Dictionary<byte, byte[]> _agentsChecks;
         private Dictionary<byte, Characters> _characterPerPlayer;
@@ -142,6 +144,10 @@ namespace Network.NetEntities
                 
                 _playersName.Add(newPlayerId, name);
                 _playersTeam.Add(newPlayerId, isTeamB);
+
+                PlayerManager playerManager = new();
+
+                _playerInfo.Add(newPlayerId, playerManager);
                 _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
                 
                 _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
@@ -169,6 +175,7 @@ namespace Network.NetEntities
         private void SubscribeToInGamePackets(TcpSocket socket)
         {
             SubscribeToHit(socket);
+            SubscribeToHeal(socket);
         }
 
         private void UnsubscribeToInGamePackets(TcpSocket socket)
@@ -274,6 +281,7 @@ namespace Network.NetEntities
                     if (pair.Key == setupCar.playerId)
                     {
                         pair.Value.SendPacket(PacketKeys.SETUP_CAR, setupCar);
+                        return;
                     }
 
                 }
@@ -285,7 +293,42 @@ namespace Network.NetEntities
         {
             socket.Subscribe(PacketKeys.HIT, (bytes) =>
             {
-                
+                Hit hitInfo = bytes.ByteArrayToObjectT<Hit>();
+
+                foreach (var pair in _playerInfo)
+                {
+                    if (pair.Key == hitInfo.player)
+                    {
+                        HitResponse hitResponse = new();
+
+                        hitResponse.currentLives = (byte)pair.Value.Hit();
+                        hitResponse.zone = hitInfo.zone;
+
+                        socket.SendPacket(PacketKeys.HIT_RESPONSE, hitResponse);
+                        return;
+                    }
+                }
+            });
+        }
+
+        private void SubscribeToHeal(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.HEAL, (bytes) =>
+            {
+                Heal healInfo = bytes.ByteArrayToObjectT<Heal>();
+
+                foreach (var pair in _playerInfo)
+                {
+                    if (pair.Key == healInfo.player)
+                    {
+                        HealResponse healResponse = new();
+
+                        healResponse.currentLife = (byte)pair.Value.Heal();
+
+                        socket.SendPacket(PacketKeys.HEAL_RESPONSE, healResponse);
+                        return;
+                    }
+                }
             });
         }
     }

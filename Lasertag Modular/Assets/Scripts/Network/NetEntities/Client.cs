@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using Interface.Agent;
+using Managers;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
@@ -26,6 +27,8 @@ namespace Network.NetEntities
         private SocketManager _serverSocketManager;
 
         private IBaseAgent _agent;
+
+        private PlayerManager _playerManager;
 
         private void Start()
         {
@@ -230,7 +233,11 @@ namespace Network.NetEntities
         {
             _socketWithServer.Subscribe(PacketKeys.HIT_RESPONSE, (bytes) =>
             {
-                
+                HitResponse response = bytes.ByteArrayToObjectT<HitResponse>();
+
+                _playerManager.SetLife((int)response.currentLives);
+
+                //_clientActionOutput.UpdateClientHealth(response.currentLives);
             });
         }
 
@@ -238,7 +245,11 @@ namespace Network.NetEntities
         {
             _socketWithServer.Subscribe(PacketKeys.HEAL_RESPONSE, (bytes) =>
             {
-                
+                HealResponse response = bytes.ByteArrayToObjectT<HealResponse>();
+
+                _playerManager.SetLife((int)response.currentLife);
+
+                //_clientActionOutput.UpdateClientHealth(response.currentLife);
             });
         }
 
