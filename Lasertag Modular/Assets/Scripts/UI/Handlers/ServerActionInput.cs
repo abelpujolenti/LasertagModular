@@ -18,8 +18,11 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryCreatePlayer()
     {
-        Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
-        ScreenHandler.PlayersMatchSettings.SetActive(false);
-        ScreenHandler.WaitingForNFC.SetActive(true);
+        if (ScreenHandler.CurrentCharacterSelected != Network.Packets.Characters.NONE && ScreenHandler.PlayerName.text!= "")
+        {
+            Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
+            ScreenHandler.PlayersMatchSettings.SetActive(false);
+            ScreenHandler.WaitingForNFC.SetActive(true);
+        }
     }
 }

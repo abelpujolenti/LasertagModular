@@ -68,10 +68,11 @@ public class ServerScreenHandler : MonoBehaviour
         FourVS.SetListener(() => OnModeSelected(7));
         FiveVS.SetListener(() => OnModeSelected(9));
 
-        for (int i = 0; i < _characterButtons.Count; i++)
+        for (byte i = 0; i < _characterButtons.Count; i++)
         {
-            _characterButtons[i].SetListener(() => OnCharacterSelected((Characters)i + 1));
-            _characterButtons[i].SetText(((Characters)i + 1).ToString());
+            byte fuckCSHARP = i;
+            _characterButtons[fuckCSHARP].SetListener(() => OnCharacterSelected((Characters)(fuckCSHARP + 1)));
+            _characterButtons[fuckCSHARP].SetText(((Characters)(fuckCSHARP + 1)).ToString());
         }
 
         TeamSelect.SetAction(UpdateCharacterButtons);
