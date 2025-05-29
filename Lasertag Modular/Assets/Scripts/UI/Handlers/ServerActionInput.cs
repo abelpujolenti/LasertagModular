@@ -22,6 +22,7 @@ public class ServerActionInput : MonoBehaviour
         {
             Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
             ScreenHandler.PlayersMatchSettings.SetActive(false);
+            ScreenHandler.MatchWaitRoom.SetActive(false);
             ScreenHandler.WaitingForNFC.SetActive(true);
         }
     }
