@@ -16,8 +16,29 @@ public class ClientActionOutput : MonoBehaviour
         IBaseAgent baseAgent = null;
         Agent agent = clientScreenHandler.playerPanel;
         agent.DecorateAgentPanel(name, character.ToString(), isteamB);
+        clientScreenHandler.SetPlayerName(name);
         baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
         return baseAgent;
+    }
+
+    public void UpdateClientScores(byte AScore, byte BScore)
+    {
+        clientScreenHandler.UpdateScore((int)AScore, (int)BScore);
+    }
+
+    public void UpdateClientHealth(byte newHealth)
+    {
+        clientScreenHandler.UpdateHealth((int)newHealth);
+    }
+
+    public void StartMatchInterface()
+    {
+        clientScreenHandler.FromPreparationToMatchScreen();
+    }
+
+    public void SetClientSkills(/*Skill skill01, Skill skill02, Skill skill03*/)
+    {
+        clientScreenHandler.SetSkills(/*Skill skill01, Skill skill02, Skill skill03*/);
     }
     
     public void UpdateConfirmedPlayers(byte confirmedPlayers)
