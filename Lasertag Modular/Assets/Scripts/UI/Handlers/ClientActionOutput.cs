@@ -21,6 +21,11 @@ public class ClientActionOutput : MonoBehaviour
         return baseAgent;
     }
 
+    public void SkillUsedInUI(string skillName)
+    {
+        clientScreenHandler.BlockSkillButtons(skillName);
+    }
+
     public void UpdateClientScores(byte AScore, byte BScore)
     {
         clientScreenHandler.UpdateScore((int)AScore, (int)BScore);

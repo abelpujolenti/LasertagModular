@@ -3,6 +3,7 @@ using System.Drawing.Drawing2D;
 using Network.Packets;
 using TMPro;
 using UI.Agent;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,6 +47,25 @@ public class ClientScreenHandler : MonoBehaviour
     public void SetPlayerName(string newName)
     {
         PlayerName.text = newName;
+    }
+
+    public void BlockSkillButtons(string skillName)
+    {
+        if (Skill01.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill01.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill01.GetComponentInChildren<Button>().interactable = false;
+        }
+        else if (Skill02.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill02.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill02.GetComponentInChildren<Button>().interactable = false;
+        }
+        else if(Skill03.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill03.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill03.GetComponentInChildren<Button>().interactable = false;
+        }
     }
 
     public void FromPreparationToMatchScreen()
