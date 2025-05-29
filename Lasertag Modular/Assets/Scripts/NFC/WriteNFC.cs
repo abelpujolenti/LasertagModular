@@ -1,34 +1,29 @@
-using DigitsNFCToolkit;
-using DigitsNFCToolkit.Samples;
-using System.Text;
 using System;
+using System.Text;
+using DigitsNFCToolkit;
+using Network.Packets;
 using UnityEngine;
-using static DigitsNFCToolkit.Samples.WriteScreenControl;
 
 public class WriteNFC : MonoBehaviour
 {
     private string domainType = "playersetup";
     private NDEFMessage pendingMessage;
-    [SerializeField]private ReadNFC readModule;
+
+    private Action _callAction;
 
     void Start()
     {
         NativeNFCManager.AddNDEFWriteFinishedListener(OnNDEFWriteFinished);
         NativeNFCManager.AddNDEFPushFinishedListener(OnNDEFPushFinished);
-
-        AddRecord();
     }
 
-    public void AddRecord()
+    public void SetCallAction(Action callAction)
     {
-        Network.Packets.CardInformation cardInfo = new Network.Packets.CardInformation();
-        cardInfo.ipAddress = "192.168.1.1";
-        cardInfo.character = Network.Packets.Characters.DEMOLISHER;
-        cardInfo.playerId = 1;
-        cardInfo.gameId = 2711;
-        cardInfo.isTeamB = 1;
-        cardInfo.portToListen = 25565;
+        _callAction = callAction;
+    }
 
+    public void AddRecord(CardWriteInformation cardWriteInformation)
+    {
         if (pendingMessage == null)
         {
             pendingMessage = new NDEFMessage();
@@ -36,27 +31,30 @@ public class WriteNFC : MonoBehaviour
 
         NDEFRecord record = null;
 
-        record = new ExternalTypeRecord(domainType, "ip", Encoding.UTF8.GetBytes(cardInfo.ipAddress));
+        record = new ExternalTypeRecord(domainType, "ip", Encoding.UTF8.GetBytes(cardWriteInformation.ipAddress));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "champion", Encoding.UTF8.GetBytes(((int)(cardInfo.character)).ToString()));
+        record = new ExternalTypeRecord(domainType, "champion", Encoding.UTF8.GetBytes(((int)(cardWriteInformation.character)).ToString()));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "gameid", Encoding.UTF8.GetBytes(cardInfo.gameId.ToString()));
+        record = new ExternalTypeRecord(domainType, "gameid", Encoding.UTF8.GetBytes(cardWriteInformation.gameId.ToString()));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "playerid", Encoding.UTF8.GetBytes(cardInfo.playerId.ToString()));
+        record = new ExternalTypeRecord(domainType, "playerid", Encoding.UTF8.GetBytes(cardWriteInformation.playerId.ToString()));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "isb", Encoding.UTF8.GetBytes(cardInfo.isTeamB.ToString()));
+        record = new ExternalTypeRecord(domainType, "isb", Encoding.UTF8.GetBytes(cardWriteInformation.isTeamB.ToString()));
         pendingMessage.Records.Add(record);
-        record = new ExternalTypeRecord(domainType, "porttolisten", Encoding.UTF8.GetBytes(cardInfo.portToListen.ToString()));
+        record = new ExternalTypeRecord(domainType, "porttolisten", Encoding.UTF8.GetBytes(cardWriteInformation.portToListen.ToString()));
+        pendingMessage.Records.Add(record);
+        record = new ExternalTypeRecord(domainType, "wifi", Encoding.UTF8.GetBytes(cardWriteInformation.wifi));
+        pendingMessage.Records.Add(record);
+        record = new ExternalTypeRecord(domainType, "password", Encoding.UTF8.GetBytes(cardWriteInformation.password));
         pendingMessage.Records.Add(record);
 
         //view.UpdateNDEFMessage(pendingMessage);
+        WriteMessage();
     }
 
     //To NFC tag
     public void WriteMessage()
     {
-        readModule.gameObject.SetActive(false);
-
         if (pendingMessage != null)
         {
 #if (!UNITY_EDITOR)
@@ -84,15 +82,13 @@ public class WriteNFC : MonoBehaviour
         if (result.Success)
         {
             writeResultString = string.Format("NDEF Message written successfully to tag {0}", result.TagID);
-
+            _callAction();
         }
         else
         {
             writeResultString = string.Format("NDEF Message failed to write to tag {0}\nError: {1}", result.TagID, result.Error);
         }
         Debug.Log(writeResultString);
-
-        readModule.gameObject.SetActive(true);
     }
 
     public void OnNDEFPushFinished(NDEFPushResult result)

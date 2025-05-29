@@ -70,9 +70,9 @@ public class ServerScreenHandler : MonoBehaviour
 
         for (byte i = 0; i < _characterButtons.Count; i++)
         {
-            byte fuckCSHARP = i;
-            _characterButtons[fuckCSHARP].SetListener(() => OnCharacterSelected((Characters)(fuckCSHARP + 1)));
-            _characterButtons[fuckCSHARP].SetText(((Characters)(fuckCSHARP + 1)).ToString());
+            byte fuckCSharp = i;
+            _characterButtons[i].SetListener(() => OnCharacterSelected((Characters)(fuckCSharp + 1)));
+            _characterButtons[i].SetText(((Characters)(i + 1)).ToString());
         }
 
         TeamSelect.SetAction(UpdateCharacterButtons);
