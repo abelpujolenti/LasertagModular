@@ -31,6 +31,11 @@ public class ClientActionOutput : MonoBehaviour
         clientScreenHandler.UpdateHealth((int)newHealth);
     }
 
+    public void StartMatchInterface()
+    {
+        clientScreenHandler.FromPreparationToMatchScreen();
+    }
+
     public void SetClientSkills(/*Skill skill01, Skill skill02, Skill skill03*/)
     {
         clientScreenHandler.SetSkills(/*Skill skill01, Skill skill02, Skill skill03*/);

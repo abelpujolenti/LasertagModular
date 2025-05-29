@@ -48,6 +48,12 @@ public class ClientScreenHandler : MonoBehaviour
         PlayerName.text = newName;
     }
 
+    public void FromPreparationToMatchScreen()
+    {
+        PlayersSetting.SetActive(false);
+        InGameUI.SetActive(true);
+    }
+
     public void SetSkills(/*Skill skill01, Skill skill02, Skill skill03*/)
     {
         /*if (skill01 != null)
