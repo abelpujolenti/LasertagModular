@@ -7,19 +7,34 @@ enum class PacketKeys
 {
   //SETUP_MOBILE = 0,
   //SETUP_MOBILE_RESPONSE = 1,
+
   SETUP_VEST = 2,
   SETUP_VEST_RESPONSE = 3,
+
   SETUP_WEAPON = 4,
   SETUP_WEAPON_RESPONSE = 5,
+
   //PLAYER_READY_TO_CHECKED = 6,
   //PLAYER_READY_TO_PLAY = 7,
   //CHECKED_PLAYERS_AMOUNT = 8,
   //READY_PLAYERS_AMOUNT = 9,
+  
   START_GAME = 10,
+
   HIT = 11,
   HIT_RESPONSE = 12,
+
   HEAL = 13,
-  END_GAME = 20,
+
+  PLANT_BOMB_REQUEST = 14,
+  PLANT_BOMB_RESPONSE = 15,
+  BOMB_KABOOM = 16,
+  BOMB_DEFUSAL_START_REQUEST = 17,
+  BOMB_DEFUSAL_FINISHED = 18,
+  BOMB_DEFUSAL_INTERRUPTED = 19,
+  BOMB_RESET = 20,
+
+  END_GAME = 30,
 };
 
 enum class Champions
@@ -150,7 +165,7 @@ public:
     isCorrect = _isCorrect;
   }
 
-JSONVar ClassToJson() override
+ JSONVar ClassToJson() override
   {
     JSONVar jsonObject;
     jsonObject["isCorrect"] = isCorrect;
@@ -230,6 +245,65 @@ public:
   {
     JSONVar jsonObject;
     //Assign variables
+    return jsonObject;
+  }
+};
+
+class PlantBombRequest : public Packet
+{
+public:
+  char site;
+  unsigned short playerId;
+
+  PlantBombRequest() { }
+
+  PlantBombRequest(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    site = jsonObject["site"];
+    playerId = jsonObject["playerId"];
+  }
+
+  PlantBombRequest(unsigned short _playerId, char _site)
+  {
+    site = _site;
+    playerId = _playerId;
+  } 
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["site"] = site;
+    jsonObject["playerId"] = playerId;
+    return jsonObject;
+  }
+
+};
+
+class PlantBombResponse : public Packet
+{
+public:
+  char site;
+  bool isAccepted;
+
+  PlantBombResponse(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    site = jsonObject["site"];
+    isAccepted = jsonObject["isAccepted"];
+  }
+
+  PlantBombResponse(bool _isAccepted, char _site)
+  {
+    site = _site;
+    isAccepted = _isAccepted;
+  } 
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["site"] = site;
+    jsonObject["isAccepted"] = isAccepted;
     return jsonObject;
   }
 };

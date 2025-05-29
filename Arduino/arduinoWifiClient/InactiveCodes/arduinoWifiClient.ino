@@ -1,5 +1,3 @@
-#include <WiFiS3.h>
-#include <Arduino_JSON.h>
 #include "LaserServerConnection.hpp"
 
 const char* WIFI_SSID = "IORouter";

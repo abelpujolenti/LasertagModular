@@ -1,6 +1,7 @@
 #include <WiFiS3.h>
-#include <Arduino_JSON.h>
 #include "TestPacket.hpp"
+
+#include <Arduino.h>
 
 enum class WifiStatus
 {
@@ -18,10 +19,11 @@ private:
   WiFiClient TCP_client;
   char* TCP_SERVER_ADDR;
   int TCP_SERVER_PORT;
-
+  int _ids[200];
+  Packet* _packets[200];
+  int _packetsSize = 0;
 
 public:
-
   //Function will be called while return value is false
   WifiStatus ConnectToServer(const char* _WIFI_SSID, const char* _WIFI_PASSWORD, const char* _TCP_SERVER_ADDR, const int _TCP_SERVER_PORT)
   {
@@ -61,11 +63,7 @@ public:
   void Update()
   {
     ListenToPackets();
-    CheckDisconnectionAndReconnection();
-
-    //Test, remove later
-    SetupVest* testPacket = new SetupVest(2,2);
-    SendPacket(testPacket, PacketKeys::SETUP_VEST);
+    CheckDisconnectionAndReconnection();  
   }
 
   void SendHello()
@@ -97,8 +95,22 @@ public:
   {
     if(TCP_client.available())
     {
-      GetPacket(); 
+      _packets[_packetsSize] = GetPacket(); 
+      _packetsSize++;
     }
+  }
+
+  void ResetPacketsArray()
+  {
+    for(int i = 0; i < _packetsSize; i++)
+      _packets[i] = nullptr;
+
+    _packetsSize = 0;
+  }
+
+  Packet** GetPacketsList()
+  {
+    return _packets;
   }
 
   void SendPacket(Packet* packet, PacketKeys packetKey)
@@ -189,4 +201,25 @@ public:
 
     return packet;
   }
+
+    bool TryGetPacketWithId(int id, Packet*& packet) { 
+
+     Packet* fPacket = nullptr;
+
+    for(int i = 0; i < _packetsSize; i++)
+    {
+      //"Load" into given packet the first packet from the list that matches the given id
+      if(_packets[i]->key == id)
+      {
+        fPacket = _packets[i];
+      }
+      if(fPacket != nullptr)
+      {
+        packet = fPacket;
+        return true;
+      }
+    }
+
+    return false;
+  } 
 };
