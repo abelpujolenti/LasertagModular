@@ -6,6 +6,7 @@ using UI.Agent;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ClientScreenHandler : MonoBehaviour
@@ -47,6 +48,11 @@ public class ClientScreenHandler : MonoBehaviour
     public void SetPlayerName(string newName)
     {
         PlayerName.text = newName;
+    }
+
+    public void BackToStartScreenScreen()
+    {
+        SceneManager.LoadScene("StartScreen");
     }
 
     public void BlockSkillButtons(string skillName)

@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Network.Packets;
 using TMPro;
 using UI.Agent;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ServerScreenHandler : MonoBehaviour
@@ -76,6 +78,23 @@ public class ServerScreenHandler : MonoBehaviour
 
         CreationSwitch.onClick.AddListener(() => SwitchToList());
         ListSwitch.onClick.AddListener(() => SwitchToCreation());
+    }
+
+    public void BackToInitialSelection()
+    {
+        InitialModeSelection.SetActive(true);
+        NormalModeSettings.SetActive(false);
+    }
+
+    public void BackToServerConnection()
+    {
+        ServerConnectionSetting.SetActive(true);
+        InitialModeSelection.SetActive(false);
+    }
+
+    public void BackToStartScreenScreen()
+    {
+        SceneManager.LoadScene("StartScreen");
     }
 
     public void BlockToggle(bool isTeamB) 
