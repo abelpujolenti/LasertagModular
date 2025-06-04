@@ -13,9 +13,9 @@ namespace UI.Agent
 
     public class Agent : MonoBehaviour, IBaseAgent
     {
-        private ushort vestCounter = 0;
-        private ushort gunCounter = 1;
-        private ushort mobileCounter = 2;
+        private byte vestCounter = 0;
+        private byte gunCounter = 1;
+        private byte mobileCounter = 2;
 
         CheckCell mobileCell;
         CheckCell gunCell;
@@ -39,20 +39,26 @@ namespace UI.Agent
             TeamBack.color = (team ? "#E16C80" : "#837DC9").ToUnityColor();
         }
 
-        private void Start()
+        public void Initiliaze()
         {
+            message = "Start";
             mobileCell = CreateImage();
+            message = "Mobile";
             mobileCell.SetImage(_mobilePath);
             AddImageToGrid(mobileCell.gameObject);
+            message = "Mobile To Grid";
 
             gunCell = CreateImage();
+            message = "Gun";
             gunCell.SetImage(_gunPath);
             AddImageToGrid(gunCell.gameObject);
+            message = "Gun To Grid";
 
             vestCell = CreateImage();
+            message = "Vest";
             vestCell.SetImage(_vestPath);
             AddImageToGrid(vestCell.gameObject);
-
+            message = "Vest To Grid";
         }
 
         public void IncrementCounter()
@@ -72,11 +78,39 @@ namespace UI.Agent
             cellGameObject.transform.SetParent(_gridLayout.transform);
         }
 
+        private string message = "Bitch";
+
         public void CheckState(byte[] checkState)
         {
-            vestCell.ToggleCheck(checkState[vestCounter] == 1);
-            gunCell.ToggleCheck(checkState[gunCounter] == 1);
+            if (!mobileCell)
+            {
+                Character.text = message;
+            }
+            else
+            {
+                Character.text = mobileCounter + "";
+            }
             mobileCell.ToggleCheck(checkState[mobileCounter] == 1);
+            
+            if (!gunCell)
+            {
+                Character.text = "gunCell null";
+            }
+            else
+            {
+                Character.text = gunCounter + "";
+            }
+            gunCell.ToggleCheck(checkState[gunCounter] == 1);
+            
+            if (!vestCell)
+            {
+                Character.text = "VEst null";
+            }
+            else
+            {
+                Character.text = vestCounter + "";
+            }
+            vestCell.ToggleCheck(checkState[vestCounter] == 1);
         }
     }
 }

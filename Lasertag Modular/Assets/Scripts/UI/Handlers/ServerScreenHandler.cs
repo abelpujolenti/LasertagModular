@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Network.Packets;
 using TMPro;
 using UI.Agent;

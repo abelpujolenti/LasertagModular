@@ -1,4 +1,5 @@
 using Network.NetEntities;
+using Network.Packets;
 using UnityEngine;
 
 public class ServerActionInput : MonoBehaviour
@@ -18,7 +19,7 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryCreatePlayer()
     {
-        if (ScreenHandler.CurrentCharacterSelected != Network.Packets.Characters.NONE && ScreenHandler.PlayerName.text!= "")
+        if (ScreenHandler.CurrentCharacterSelected != Characters.NONE && ScreenHandler.PlayerName.text!= "")
         {
             Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
             ScreenHandler.PlayersMatchSettings.SetActive(false);

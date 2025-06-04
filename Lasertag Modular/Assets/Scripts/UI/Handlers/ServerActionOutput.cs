@@ -35,14 +35,16 @@ public class ServerActionOutput : MonoBehaviour
             agent.DecorateAgentPanel(name, character.ToString(), isteamB);
             baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
             ScreenHandler.TeamAAgents[teamASlot].gameObject.SetActive(true);
+            ScreenHandler.TeamAAgents[teamASlot].Initiliaze();
             teamASlot++;
         }
         else
         {
-            Agent agent = ScreenHandler.TeamAAgents[teamBSlot];
+            Agent agent = ScreenHandler.TeamBAgents[teamBSlot];
             agent.DecorateAgentPanel(name, character.ToString(), isteamB);
             baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
-            ScreenHandler.TeamAAgents[teamBSlot].gameObject.SetActive(true);
+            ScreenHandler.TeamBAgents[teamBSlot].gameObject.SetActive(true);
+            ScreenHandler.TeamBAgents[teamBSlot].Initiliaze();
             teamBSlot++;
         }
 

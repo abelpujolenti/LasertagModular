@@ -89,14 +89,19 @@ namespace Managers
             _equipmentOrder = new Dictionary<Characters, Dictionary<Equipment, byte>>
             {
                 { Characters.ENGINEER, engineerEquipmentOrder },
-                { Characters.SCOUT, engineerEquipmentOrder },
-                { Characters.DEFENDER, engineerEquipmentOrder },
-                { Characters.DEMOLISHER, engineerEquipmentOrder },
-                { Characters.REFLECTOR, engineerEquipmentOrder },
-                { Characters.NINJA, engineerEquipmentOrder },
-                { Characters.HEALER, engineerEquipmentOrder },
-                { Characters.HACKER, engineerEquipmentOrder },
+                { Characters.SCOUT, scoutEquipmentOrder },
+                { Characters.DEFENDER, defenderEquipmentOrder },
+                { Characters.DEMOLISHER, demolisherEquipmentOrder },
+                { Characters.REFLECTOR, reflectorEquipmentOrder },
+                { Characters.NINJA, ninjaEquipmentOrder },
+                { Characters.HEALER, healerEquipmentOrder },
+                { Characters.HACKER, hackerEquipmentOrder },
             };
+        }
+
+        public int GetEquipmentAmount(Characters character)
+        {
+            return _equipmentOrder[character].Count;
         }
 
         public int GetEquipmentOrder(Characters character, Equipment equipment)

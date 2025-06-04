@@ -1,10 +1,6 @@
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using Network.Packets;
 using TMPro;
 using UI.Agent;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,6 +11,8 @@ public class ClientScreenHandler : MonoBehaviour
     public GameObject WaitingForNFC;
     public GameObject PlayersSetting;
     public GameObject InGameUI;
+
+    private GameObject _currentActiveUI;
 
     [Header("PlayerSetting")]
     public TMP_Text MatchPreparationValue;
@@ -35,9 +33,8 @@ public class ClientScreenHandler : MonoBehaviour
 
     private void Start()
     {
-        WaitingForNFC.SetActive(true);
-        PlayersSetting.SetActive(false);
-        InGameUI.SetActive(false);
+        _currentActiveUI = WaitingForNFC;
+        _currentActiveUI.SetActive(true);
     }
 
     public void UpdateMatchState()
@@ -72,6 +69,28 @@ public class ClientScreenHandler : MonoBehaviour
             Skill03.GetComponentInChildren<Animator>().SetTrigger("Disabled");
             Skill03.GetComponentInChildren<Button>().interactable = false;
         }
+    }
+
+    public void EnableNFC()
+    {
+        ChangeCurrentUI(WaitingForNFC);
+    }
+
+    public void EnablePlayerSetting()
+    {
+        ChangeCurrentUI(PlayersSetting);
+    }
+
+    public void EnableInGameUI()
+    {
+        ChangeCurrentUI(InGameUI);
+    }
+
+    private void ChangeCurrentUI(GameObject ui)
+    {
+        _currentActiveUI.SetActive(false);
+        ui.SetActive(true);
+        _currentActiveUI = ui;
     }
 
     public void FromPreparationToMatchScreen()

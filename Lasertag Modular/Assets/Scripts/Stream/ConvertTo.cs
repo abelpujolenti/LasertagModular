@@ -24,7 +24,7 @@ namespace Stream
         
         public static T ByteArrayToObjectT<T>(this byte[] data)
         {
-            string json = Encoding.UTF8.GetString(data);
+            string json = Encoding.UTF8.GetString(data).TrimEnd('\0');
             return JsonUtility.FromJson<T>(json);
         }
     }
