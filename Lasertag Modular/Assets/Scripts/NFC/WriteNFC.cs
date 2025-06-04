@@ -13,8 +13,11 @@ public class WriteNFC : MonoBehaviour
 
     void Start()
     {
+        
+#if (!UNITY_EDITOR) && UNITY_ANDROID
         NativeNFCManager.AddNDEFWriteFinishedListener(OnNDEFWriteFinished);
         NativeNFCManager.AddNDEFPushFinishedListener(OnNDEFPushFinished);
+#endif
     }
 
     public void SetCallAction(Action callAction)

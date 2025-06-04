@@ -17,6 +17,5 @@ namespace UI.Agent
         {
             check.SetActive(state);
         }
-
     }
 }

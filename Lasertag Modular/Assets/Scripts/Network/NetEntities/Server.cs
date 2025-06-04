@@ -8,6 +8,7 @@ using Managers;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -42,6 +43,8 @@ namespace Network.NetEntities
         private CardWriteInformation _cardWriteBaseInformation = new CardWriteInformation();
         private CardWriteInformation _cardWriteInformation;
 
+        [SerializeField] private TextMeshProUGUI _text;
+        
         private void Start()
         {
             _serverSocketManager = new SocketManager((socket) =>
@@ -124,6 +127,7 @@ namespace Network.NetEntities
             _password = password;
             _serverActionOutput.ConnectionSettuped();
 
+            //_cardWriteBaseInformation.ipAddress = "192.168.1.130";
             _cardWriteBaseInformation.wifi = _ssid;
             _cardWriteBaseInformation.password = _password;
         }
@@ -166,11 +170,16 @@ namespace Network.NetEntities
 
             _writeNFC.AddRecord(_cardWriteInformation);
             
+            _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
+            _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
+            
             _onReadCharacter = () =>
             {
                 _onReadCharacter = () => {};
                 
                 _playersName.Add(newPlayerId, name);
+                _characterPerPlayer.Add(newPlayerId, character);
+                _agentsChecks.Add(newPlayerId, new byte[CharacterManager.Instance.GetEquipmentAmount(character)]);
                 _playersTeam.Add(newPlayerId, isTeamB);
                 _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
                 
@@ -220,6 +229,15 @@ namespace Network.NetEntities
             agentCheck[position] = 1;
                 
             _agentsChecks[playerId] = agentCheck;
+
+            string message = "";
+
+            for (int i = 0; i < agentCheck.Length; i++)
+            {
+                message += agentCheck[i] + "";
+            }
+
+            _text.text = message;
                 
             _agents[playerId].CheckState(agentCheck);
 
@@ -316,5 +334,19 @@ namespace Network.NetEntities
                 
             });
         }
+        
+        //DEBUG
+
+        [SerializeField] private int _guarradaCochinosa;
+
+        private void Update()
+        {
+            if (_guarradaCochinosa == 0)
+            {
+                return;
+            }
+        }
+        
+        //
     }
 }

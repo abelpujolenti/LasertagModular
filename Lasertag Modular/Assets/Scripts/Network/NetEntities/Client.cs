@@ -5,6 +5,7 @@ using Interface.Agent;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using TMPro;
 using UnityEngine;
 
 //typdef
@@ -156,7 +157,16 @@ namespace Network.NetEntities
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
 
-                _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
+                _text.text = "RECEIVED";
+
+                _text.text = (int)setupResponse.character + "";
+
+                _text.text = setupResponse.playerName;
+
+                _text.text = setupResponse.isTeamB ? "True" : "False";
+
+                //_clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
+                _agent = _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
 
@@ -288,5 +298,30 @@ namespace Network.NetEntities
         {
 
         }
+        
+        //DEBUG
+        [SerializeField] private int _guarradaCochinosa;
+
+        [SerializeField] private TextMeshProUGUI _text;
+        [SerializeField] private string _ip;
+        [SerializeField] private int _port;
+
+        public void Connect()
+        {
+            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ip), _port));
+        }
+
+        private void Update()
+        {
+            if (_guarradaCochinosa == 0)
+            {
+                return;
+            }
+
+            _guarradaCochinosa = 0;
+
+            _clientActionOutput.PlayerConfirmed(Characters.ENGINEER, "setupResponse.playerName", true);
+        }
+        //
     }
 }
