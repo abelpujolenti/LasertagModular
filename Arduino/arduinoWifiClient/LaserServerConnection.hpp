@@ -19,6 +19,9 @@ private:
   char* TCP_SERVER_ADDR;
   int TCP_SERVER_PORT;
 
+  Packet* _packets[256];
+  int _currentPacketsSize = 0;
+
 
 public:
 
@@ -60,12 +63,15 @@ public:
 
   void Update()
   {
-    ListenToPackets();
-    CheckDisconnectionAndReconnection();
+    ClearPacketsList();
 
     //Test, remove later
-    SetupVest* testPacket = new SetupVest(2,2);
-    SendPacket(testPacket, PacketKeys::SETUP_VEST);
+    _packets[_currentPacketsSize] = new PlantBombRequest('a', 2);
+    _packets[_currentPacketsSize]->key = (int)PacketKeys::PLANT_BOMB_REQUEST;
+    _currentPacketsSize++;
+
+    ListenToPackets();
+    CheckDisconnectionAndReconnection();
   }
 
   void SendHello()
@@ -97,7 +103,13 @@ public:
   {
     if(TCP_client.available())
     {
-      GetPacket(); 
+      Packet* newPacket = GetPacket();
+
+      if(newPacket != nullptr)
+      {
+        _packets[_currentPacketsSize] = newPacket;
+        _currentPacketsSize++;
+      }
     }
   }
 
@@ -131,6 +143,16 @@ public:
 
     //Add json to byte array
     TCP_client.write(buffer, sizeof(buffer));
+  }
+
+  void ClearPacketsList()
+  {
+    for(int i = _currentPacketsSize; i > 0; i--)
+    {
+      delete _packets[i];
+      _packets[i] = nullptr;
+    }
+    _currentPacketsSize = 0;
   }
 
   Packet* GetPacket()
@@ -189,4 +211,20 @@ public:
 
     return packet;
   }
+
+  bool TryGetPacketWithId(int key, Packet* &packet)
+  {
+
+    for(int i = 0; i < _currentPacketsSize; i++)
+    {
+      if(_packets[i]->key == key)
+      {
+        packet = _packets[i];
+        return true;
+      }
+    }
+
+    return false;
+  }
+
 };

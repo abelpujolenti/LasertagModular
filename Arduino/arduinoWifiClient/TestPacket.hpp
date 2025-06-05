@@ -269,7 +269,7 @@ public:
     jsonObject["playerId"] = playerId;
     return jsonObject;
   }
-}
+};
 
 class EndGame : public Packet
 {

@@ -28,12 +28,14 @@ void setup()
   Serial.println("Arduino: TCP CLIENT");
   InitPins();
 
+/*
   WifiStatus status;
   do
   {
     status = laserServerConnection.ConnectToServer(WIFI_SSID, WIFI_PASSWORD, TCP_SERVER_ADDR, TCP_SERVER_PORT);
     Serial.println((int)status);
   } while(status != WifiStatus::ALL_OK);
+  */
 
 
   //TEST
@@ -43,7 +45,7 @@ void setup()
 
 void loop()
 {
-  Serial.println("Update");
+  //Serial.println("Update");
   laserServerConnection.Update(); 
 
   ProcessPackets();
@@ -64,8 +66,9 @@ void loop()
 void ProcessPackets()
 {
     Packet* packet = nullptr;
+    Serial.println("Processing");
 
-    if(laserServerConnection.TryGetPacketWithId((int)PacketKeys::PLANT_BOMB_RESPONSE, packet))
+    if(laserServerConnection.TryGetPacketWithId((int)PacketKeys::PLANT_BOMB_REQUEST, packet))
     {
         PlantBombRequest* pbr = (PlantBombRequest*)packet;
 
