@@ -118,7 +118,6 @@ public class ServerScreenHandler : MonoBehaviour
         foreach (MyButton button in _characterButtons)
         {
             button.SetIsClickable(true);
-            button.Unselect();
         }
 
         if (TeamSelect.GetIsOn())
@@ -139,13 +138,13 @@ public class ServerScreenHandler : MonoBehaviour
 
     private void DisableCharactersButton(Characters character)
     {
-        for (int i = 0; i < _characterButtons.Count; ++i)
+        foreach(MyButton btn in _characterButtons)
         {
-            if ((int)character != i + 1)
+            if (btn.GetText() != character.ToString())
             {
                 continue;
             }
-            _characterButtons[i].SetIsClickable(false);
+            btn.SetIsClickable(false);
         }
     }
 
