@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Factory;
 using Interface.Agent;
 using Network.Packets;
@@ -7,6 +10,11 @@ using UnityEngine;
 public class ClientActionOutput : MonoBehaviour
 {
     [SerializeField] private ClientScreenHandler clientScreenHandler;
+
+    private void Start()
+    {
+        clientScreenHandler.PlayersSetting.SetActive(false);
+    }
 
     public IBaseAgent PlayerConfirmed(Characters character, string name, bool isteamB)
     {

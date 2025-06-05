@@ -89,6 +89,11 @@ namespace Network.NetEntities
             _socketWithServer.SendPacket(PacketKeys.SETUP_MOBILE, setupMobile);
         }
 
+        public void SendPlayerReadyToPlay()
+        {
+            _socketWithServer.SendPacket(PacketKeys.PLAYER_READY_TO_PLAY);
+        }
+
         private void SubscribeToLobbyPackets()
         {
             SubscribeToSetupCharacterResponse();
@@ -157,15 +162,6 @@ namespace Network.NetEntities
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
 
-                _text.text = "RECEIVED";
-
-                _text.text = (int)setupResponse.character + "";
-
-                _text.text = setupResponse.playerName;
-
-                _text.text = setupResponse.isTeamB ? "True" : "False";
-
-                //_clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
                 _agent = _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
