@@ -6,7 +6,7 @@
 //NETWORK VARIABLES
 const char* WIFI_SSID = "IORouter";
 const char* WIFI_PASSWORD = "00000000";
-const char* TCP_SERVER_ADDR = "192.168.1.26";
+const char* TCP_SERVER_ADDR = "192.168.1.51";
 const int TCP_SERVER_PORT = 3000;
 LaserServerConnection laserServerConnection;
 
@@ -28,18 +28,18 @@ void setup()
   Serial.println("Arduino: TCP CLIENT");
   InitPins();
 
-/*
+
   WifiStatus status;
   do
   {
     status = laserServerConnection.ConnectToServer(WIFI_SSID, WIFI_PASSWORD, TCP_SERVER_ADDR, TCP_SERVER_PORT);
     Serial.println((int)status);
   } while(status != WifiStatus::ALL_OK);
-  */
+  
 
 
   //TEST
-  buzzerComponent.Buzz(buzzerMaxTimeActive, 10);
+  //buzzerComponent.Buzz(buzzerMaxTimeActive, 10);
 }
 
 
@@ -50,6 +50,7 @@ void loop()
 
   ProcessPackets();
 
+/*
   //Connection to bomb site
   int connectToSiteResult = CheckConnectedToSite();
   if(connectToSiteResult == 0 && isConnectedToSite)
@@ -59,6 +60,7 @@ void loop()
 
   //Update buzzer
   buzzerComponent.Update();
+  */
 }
 
 
