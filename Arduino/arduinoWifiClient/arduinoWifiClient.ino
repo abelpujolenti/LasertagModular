@@ -39,7 +39,7 @@ void setup()
 
 
   //TEST
-  //buzzerComponent.Buzz(buzzerMaxTimeActive, 10);
+  buzzerComponent.Buzz(buzzerMaxTimeActive, 10);
 }
 
 
@@ -50,7 +50,6 @@ void loop()
 
   ProcessPackets();
 
-/*
   //Connection to bomb site
   int connectToSiteResult = CheckConnectedToSite();
   if(connectToSiteResult == 0 && isConnectedToSite)
@@ -60,7 +59,6 @@ void loop()
 
   //Update buzzer
   buzzerComponent.Update();
-  */
 }
 
 
