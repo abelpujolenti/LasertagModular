@@ -11,11 +11,6 @@ public class ClientActionOutput : MonoBehaviour
 {
     [SerializeField] private ClientScreenHandler clientScreenHandler;
 
-    private void Start()
-    {
-        clientScreenHandler.PlayersSetting.SetActive(false);
-    }
-
     public IBaseAgent PlayerConfirmed(Characters character, string name, bool isteamB)
     {
         clientScreenHandler.playerPanel.Initiliaze();

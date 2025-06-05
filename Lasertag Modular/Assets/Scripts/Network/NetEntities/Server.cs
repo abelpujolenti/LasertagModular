@@ -264,6 +264,21 @@ namespace Network.NetEntities
                 };
                 
                 socket.SendPacket(PacketKeys.SETUP_CHARACTER_RESPONSE, setupResponse);
+
+                Action<List<TcpSocket>> action = (sockets) =>
+                {
+                    CheckedPlayersAmount checkedPlayersAmount = new CheckedPlayersAmount
+                    {
+                        checkedPlayersAmount = (byte)_playersReadyCheck.Count
+                    };
+                    
+                    foreach (TcpSocket socket in sockets)
+                    {
+                        socket.SendPacket(PacketKeys.CHECKED_PLAYERS_AMOUNT, checkedPlayersAmount);
+                    }
+                };
+
+                _serverSocketManager.GetSocketsAsync(action);
             });
         }
 
@@ -340,7 +355,33 @@ namespace Network.NetEntities
                 
                 bool isReady = _playersReadyCheck[playerId];
 
+                _text.text = "RECEIVE";
+
                 _playersReadyCheck[playerId] = !isReady;
+
+                Action<List<TcpSocket>> action = (sockets) =>
+                {
+                    ReadyPlayersAmount readyPlayersAmount = new ReadyPlayersAmount();
+
+                    foreach (bool isChecked in _playersReadyCheck.Values)
+                    {
+                        if (!isChecked)
+                        {
+                            continue;
+                        }
+
+                        readyPlayersAmount.readyPlayersAmount++;
+                    }
+
+                    _text.text = readyPlayersAmount.readyPlayersAmount + "";
+                    
+                    foreach (TcpSocket socket in sockets)
+                    {
+                        socket.SendPacket(PacketKeys.READY_PLAYERS_AMOUNT, readyPlayersAmount);
+                    }
+                };
+
+                _serverSocketManager.GetSocketsAsync(action);
             });
         }
 

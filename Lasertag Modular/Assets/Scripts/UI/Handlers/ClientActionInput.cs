@@ -1,8 +1,9 @@
+using Network.NetEntities;
 using UnityEngine;
 
 public class ClientActionInput : MonoBehaviour
 {
-    ClientScreenHandler clientScreenHandler;
+    [SerializeField] private Client _client;
 
     [Header("PlayerSetting")]
     public MyToggle ReadySelect;
@@ -15,6 +16,6 @@ public class ClientActionInput : MonoBehaviour
     public void ReadyStateSwaped()
     {
         bool isReady = ReadySelect.enabled;
-        //TODO: call changed player ready state
+        ReadySelect.SetAction(_client.SendPlayerReadyToPlay);
     }
 }
