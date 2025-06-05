@@ -32,6 +32,7 @@ public class MyToggle : MonoBehaviour, IPointerClickHandler
         }
         _isOn ^= true;
         _checker.SetActive(_isOn);
+        _action();
     }
 
     public bool GetIsOn() 

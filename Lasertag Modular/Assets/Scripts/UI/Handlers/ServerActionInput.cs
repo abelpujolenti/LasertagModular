@@ -25,10 +25,10 @@ public class ServerActionInput : MonoBehaviour
     {
         if (ScreenHandler.CurrentCharacterSelected != Characters.NONE && ScreenHandler.PlayerName.text!= "")
         {
-            Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
             ScreenHandler.PlayersMatchSettings.SetActive(false);
             ScreenHandler.MatchWaitRoom.SetActive(false);
             ScreenHandler.WaitingForNFC.SetActive(true);
+            Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
         }
     }
 }

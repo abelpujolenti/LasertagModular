@@ -13,8 +13,14 @@ public class MyButton : MonoBehaviour, IPointerClickHandler
 
     private Action<int> _onPressed;
     private Action _listener;
+    private Action _notSelected = () => { };
 
     bool _isPressed;
+
+    private void Start()
+    {
+        _notSelected = () => _animator.SetTrigger("Normal");
+    }
 
     public void SetOnPressedAction(Action<int> onPressed)
     { 
@@ -31,6 +37,11 @@ public class MyButton : MonoBehaviour, IPointerClickHandler
         _text.text = text;
     }
 
+    public string GetText()
+    {
+        return _text.text;
+    }
+
     public void Select() 
     {
         _animator.SetTrigger("Selected");
@@ -38,7 +49,7 @@ public class MyButton : MonoBehaviour, IPointerClickHandler
 
     public void Unselect() 
     {
-        _animator.SetTrigger("Normal");
+        _notSelected();
     }
 
     public void SetIsClickable(bool isClickable)
@@ -47,10 +58,18 @@ public class MyButton : MonoBehaviour, IPointerClickHandler
 
         if (_isClickable) 
         {
+            ChangeOffState("Normal");
+            Unselect();
             return;
         }
 
-        _animator.SetTrigger("Disabled");
+        ChangeOffState("Disabled");
+        Unselect();
+    }
+
+    public void ChangeOffState(string state)
+    {
+        _notSelected = () => _animator.SetTrigger(state);
     }
 
     public void OnPointerClick(PointerEventData eventData)

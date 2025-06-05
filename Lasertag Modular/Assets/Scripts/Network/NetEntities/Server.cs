@@ -43,6 +43,9 @@ namespace Network.NetEntities
         private CardWriteInformation _cardWriteBaseInformation = new CardWriteInformation();
         private CardWriteInformation _cardWriteInformation;
 
+        private byte _teamAPlayers = 0;
+        private byte _teamBPlayers = 0;
+
         [SerializeField] private TextMeshProUGUI _text;
         
         private void Start()
@@ -169,8 +172,17 @@ namespace Network.NetEntities
             };
 
             _writeNFC.AddRecord(_cardWriteInformation);
-            
-            _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
+
+            if (!isTeamB)
+            {
+                _characterTeamA[_teamAPlayers++] = character;
+            }
+            else
+            {
+                _characterTeamB[_teamBPlayers++] = character;
+            }
+
+            _serverActionOutput.SetAgent(character, name, isTeamB);
             _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
             
             _onReadCharacter = () =>
@@ -182,6 +194,15 @@ namespace Network.NetEntities
                 _agentsChecks.Add(newPlayerId, new byte[CharacterManager.Instance.GetEquipmentAmount(character)]);
                 _playersTeam.Add(newPlayerId, isTeamB);
                 _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
+
+                if (!isTeamB)
+                {
+                    _characterTeamA[_teamAPlayers++] = character;
+                }
+                else
+                {
+                    _characterTeamB[_teamBPlayers++] = character;
+                }
                 
                 _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
             };

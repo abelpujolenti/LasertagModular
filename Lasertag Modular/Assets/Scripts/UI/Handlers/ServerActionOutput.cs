@@ -23,6 +23,20 @@ public class ServerActionOutput : MonoBehaviour
         ScreenHandler.PlayersMatchSettings.SetActive(true);
     }
 
+    [SerializeField] private int _sh;
+
+    private void Update()
+    {
+        if (_sh == 0)
+        {
+            return;
+        }
+
+        _sh = 0;
+
+        //SetAgent(Characters.ENGINEER, name, false);
+    }
+
     public IBaseAgent SetAgent(Characters character, string name, bool isteamB)
     {
         ScreenHandler.WaitingForNFC.SetActive(false);
@@ -53,11 +67,11 @@ public class ServerActionOutput : MonoBehaviour
 
     public void UpdatePlayerMatchSettings(Characters[] teamA, Characters[] teamB)
     {
-        if (teamA.Contains(Characters.NONE))
+        if (!teamB.Contains(Characters.NONE) && teamA.Contains(Characters.NONE))
         {
             ScreenHandler.BlockToggle(false);
         }
-        if (teamB.Contains(Characters.NONE))
+        if (!teamA.Contains(Characters.NONE) && teamB.Contains(Characters.NONE))
         {
             ScreenHandler.BlockToggle(true);
         }
