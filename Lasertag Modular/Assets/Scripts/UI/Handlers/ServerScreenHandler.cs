@@ -115,6 +115,8 @@ public class ServerScreenHandler : MonoBehaviour
 
     public void UpdateCharacterButtons()
     {
+        OnCharacterSelected(Characters.NONE);
+        
         foreach (MyButton button in _characterButtons)
         {
             button.SetIsClickable(true);

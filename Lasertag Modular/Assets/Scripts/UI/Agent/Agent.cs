@@ -36,7 +36,7 @@ namespace UI.Agent
         {
             Name.text = name;
             Character.text = character;
-            TeamBack.color = (team ? "#E16C80" : "#837DC9").ToUnityColor();
+            TeamBack.color = (team ? "#837DC9" : "#E16C80").ToUnityColor();
         }
 
         public void Initiliaze()

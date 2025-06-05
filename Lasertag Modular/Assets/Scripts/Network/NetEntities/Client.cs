@@ -161,7 +161,7 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.SETUP_CHARACTER_RESPONSE, (bytes) =>
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
-
+                
                 _agent = _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
@@ -190,7 +190,9 @@ namespace Network.NetEntities
             {
                 CheckedPlayersAmount checkedPlayersAmount = bytes.ByteArrayToObjectT<CheckedPlayersAmount>();
 
-                _clientActionOutput.UpdateConfirmedPlayers(checkedPlayersAmount.checkedPlayersAmount);
+                _text.text = checkedPlayersAmount.checkedPlayersAmount + "";
+                
+                _clientActionOutput.UpdateAllPlayers(checkedPlayersAmount.checkedPlayersAmount);
             });
         }
 
@@ -199,8 +201,10 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.READY_PLAYERS_AMOUNT, (bytes) =>
             {
                 ReadyPlayersAmount readyPlayersAmount = bytes.ByteArrayToObjectT<ReadyPlayersAmount>();
-                
-                _clientActionOutput.UpdateAllPlayers(readyPlayersAmount.readyPlayersAmount);
+
+                _text.text = "RECEIVE";
+
+                _clientActionOutput.UpdateConfirmedPlayers(readyPlayersAmount.readyPlayersAmount);
             });
         }
 
