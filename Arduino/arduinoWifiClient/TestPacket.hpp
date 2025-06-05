@@ -19,7 +19,15 @@ enum class PacketKeys
   HIT = 11,
   HIT_RESPONSE = 12,
   HEAL = 13,
-  END_GAME = 20,
+  PLANT_BOMB_REQUEST = 14,
+  PLANT_BOMB_RESPONSE = 15,
+  BOMB_KABOOM = 16,
+  BOMB_DEFUSAL_START_REQUEST = 17,
+  BOMB_DEFUSAL_START_RESPONSE = 18,
+  BOMB_DEFUSAL_FINISHED = 19,
+  BOMB_DEFUSAL_INTERRUPTED = 20,
+  BOMB_RESET = 21,
+  END_GAME = 30,
 };
 
 enum class Champions
@@ -233,6 +241,35 @@ public:
     return jsonObject;
   }
 };
+
+class PlantBombRequest : public Packet
+{
+public:
+  char site;
+  unsigned short playerId;
+
+  PlantBombRequest(byte data[BYTE_BUFFER_SIZE - sizeof(uint32_t)]) : Packet(data)
+  {
+    JSONVar jsonObject = BufferToJson(data);
+    //Assign variables
+    site = jsonObject["site"];
+    playerId = jsonObject["playerId"];
+  }
+
+  PlantBombRequest(char _site, unsigned short _playerId)
+  {
+    site = _site;
+    playerId = _playerId;
+  }
+
+  JSONVar ClassToJson() override
+  {
+    JSONVar jsonObject;
+    jsonObject["site"] = site;
+    jsonObject["playerId"] = playerId;
+    return jsonObject;
+  }
+}
 
 class EndGame : public Packet
 {
