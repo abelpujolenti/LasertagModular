@@ -26,6 +26,7 @@ public class ServerScreenHandler : MonoBehaviour
     public MyButton ThreeVS;
     public MyButton FourVS;
     public MyButton FiveVS;
+    public Animator SelectButtonAnimator;
 
     [Header("Character Select")]
     [SerializeField] private List<MyButton> _characterButtons;
@@ -117,6 +118,7 @@ public class ServerScreenHandler : MonoBehaviour
         foreach (MyButton button in _characterButtons)
         {
             button.SetIsClickable(true);
+            button.Unselect();
         }
 
         if (TeamSelect.GetIsOn())

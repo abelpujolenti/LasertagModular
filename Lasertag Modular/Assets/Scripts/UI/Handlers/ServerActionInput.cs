@@ -14,7 +14,11 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryApplyGameMode()
     {
-        Server.SetupMatch(ScreenHandler.NormalModeSelected);
+        if (ScreenHandler.NormalModeSelected != 0)
+        {
+            Server.SetupMatch(ScreenHandler.NormalModeSelected);
+            ScreenHandler.SelectButtonAnimator.SetTrigger("Normal");
+        }
     }
 
     public void TryCreatePlayer()
