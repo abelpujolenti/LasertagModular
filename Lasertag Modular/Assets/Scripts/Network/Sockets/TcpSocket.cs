@@ -42,12 +42,12 @@ namespace Network.Sockets
 
         public void SendPacket(PacketKeys key)
         {
-            _socket.Send(BitConverter.GetBytes((ushort)key));
+            _socket.Send(BitConverter.GetBytes((byte)key));
         }
 
         public void SendPacket<T>(PacketKeys key, T obj)
         {
-            byte[] keyData = BitConverter.GetBytes((ushort)key);
+            byte[] keyData = {(byte)key};
 
             byte[] objectData = ConvertTo.ObjectToByteArray(obj);
             
@@ -60,7 +60,6 @@ namespace Network.Sockets
             int objectDataLength = arr2.Length;
             
             byte[] data = new byte[keyDataLength + objectDataLength];
-            
             
             for (int i = 0; i < keyDataLength; i++)
             {
@@ -77,19 +76,18 @@ namespace Network.Sockets
 
         public void ReceivePacket()
         {
-            byte[] buffer = new byte[256];  
+            byte[] buffer = new byte[255];  
             _socket.Receive(buffer);
 
-            PacketKeys key = (PacketKeys)BitConverter.ToUInt32(buffer, 0);
+            PacketKeys key = (PacketKeys)buffer[0];
             
-            int sizeOfUint = sizeof(uint);
+            byte sizeOfByte = sizeof(byte);
             
-            byte[] data = new byte[buffer.Length - sizeOfUint];
+            byte[] data = new byte[buffer.Length - sizeOfByte];
 
-            for (int i = sizeOfUint; i < buffer.Length; i++)
+            for (byte i = sizeOfByte; i < buffer.Length; i++)
             {
-                data[i - sizeOfUint] = buffer[i];
-                
+                data[i - sizeOfByte] = buffer[i];
             }
 
             ProcessPacket(key, data);

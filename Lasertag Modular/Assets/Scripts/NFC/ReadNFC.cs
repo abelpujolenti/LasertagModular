@@ -1,20 +1,16 @@
+using System.Collections.Generic;
+using System.Text;
 using DigitsNFCToolkit;
 using Network.NetEntities;
 using Network.Packets;
-using System.Collections.Generic;
-using System.Text;
-using TMPro;
 using UnityEngine;
 
 public class ReadNFC : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI tmp;
     [SerializeField] private Client client;
 
     public void Start()
     {
-        Debug.Log(ushort.Parse("2711"));
-
         #if (UNITY_EDITOR)
             return; //Dont init nfc libraries unless in build
         #endif
@@ -40,7 +36,6 @@ public class ReadNFC : MonoBehaviour
             readResultString = string.Format("Failed to read NDEF Message from tag {0}\nError: {1}", result.TagID, result.Error);
         }
         Debug.Log(readResultString);
-
     }
 
     private void ReadNDEFMessage(NDEFMessage message)
@@ -59,8 +54,6 @@ public class ReadNFC : MonoBehaviour
             string dataValue = Encoding.UTF8.GetString(externalTypeRecord.domainData);
             var domainName = externalTypeRecord.domainName;
             var domainType = externalTypeRecord.domainType;
-
-            tmp.text += domainName + "." + domainType + ":" + dataValue;
 
             switch (domainType)
             {
@@ -87,7 +80,6 @@ public class ReadNFC : MonoBehaviour
             }
         }
 
-        tmp.text += "\n" + cardInfo.Debug() + "\n";
         client.ReceiveInformationFromCard(cardInfo);
     }
 

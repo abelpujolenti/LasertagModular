@@ -6,12 +6,12 @@ using UnityEngine;
 
 public class ClientActionOutput : MonoBehaviour
 {
-    ClientScreenHandler clientScreenHandler;
+    [SerializeField] private ClientScreenHandler clientScreenHandler;
 
     public IBaseAgent PlayerConfirmed(Characters character, string name, bool isteamB)
     {
-        clientScreenHandler.WaitingForNFC.SetActive(false);
-        clientScreenHandler.PlayersSetting.SetActive(true);
+        clientScreenHandler.playerPanel.Initiliaze();
+        clientScreenHandler.EnablePlayerSetting();
 
         IBaseAgent baseAgent = null;
         Agent agent = clientScreenHandler.playerPanel;
@@ -19,6 +19,11 @@ public class ClientActionOutput : MonoBehaviour
         clientScreenHandler.SetPlayerName(name);
         baseAgent = CharacterFactory.Instance.CreateAgent(character, agent);
         return baseAgent;
+    }
+
+    public void SkillUsedInUI(string skillName)
+    {
+        clientScreenHandler.BlockSkillButtons(skillName);
     }
 
     public void UpdateClientScores(byte AScore, byte BScore)

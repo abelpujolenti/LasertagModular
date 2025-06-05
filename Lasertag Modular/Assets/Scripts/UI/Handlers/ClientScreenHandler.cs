@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using Network.Packets;
 using TMPro;
 using UI.Agent;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ClientScreenHandler : MonoBehaviour
@@ -13,6 +11,8 @@ public class ClientScreenHandler : MonoBehaviour
     public GameObject WaitingForNFC;
     public GameObject PlayersSetting;
     public GameObject InGameUI;
+
+    private GameObject _currentActiveUI;
 
     [Header("PlayerSetting")]
     public TMP_Text MatchPreparationValue;
@@ -33,9 +33,8 @@ public class ClientScreenHandler : MonoBehaviour
 
     private void Start()
     {
-        WaitingForNFC.SetActive(true);
-        PlayersSetting.SetActive(false);
-        InGameUI.SetActive(false);
+        _currentActiveUI = WaitingForNFC;
+        _currentActiveUI.SetActive(true);
     }
 
     public void UpdateMatchState()
@@ -46,6 +45,52 @@ public class ClientScreenHandler : MonoBehaviour
     public void SetPlayerName(string newName)
     {
         PlayerName.text = newName;
+    }
+
+    public void BackToStartScreenScreen()
+    {
+        SceneManager.LoadScene("StartScreen");
+    }
+
+    public void BlockSkillButtons(string skillName)
+    {
+        if (Skill01.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill01.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill01.GetComponentInChildren<Button>().interactable = false;
+        }
+        else if (Skill02.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill02.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill02.GetComponentInChildren<Button>().interactable = false;
+        }
+        else if(Skill03.GetComponentInChildren<TMP_Text>().text == skillName)
+        {
+            Skill03.GetComponentInChildren<Animator>().SetTrigger("Disabled");
+            Skill03.GetComponentInChildren<Button>().interactable = false;
+        }
+    }
+
+    public void EnableNFC()
+    {
+        ChangeCurrentUI(WaitingForNFC);
+    }
+
+    public void EnablePlayerSetting()
+    {
+        ChangeCurrentUI(PlayersSetting);
+    }
+
+    public void EnableInGameUI()
+    {
+        ChangeCurrentUI(InGameUI);
+    }
+
+    private void ChangeCurrentUI(GameObject ui)
+    {
+        _currentActiveUI.SetActive(false);
+        ui.SetActive(true);
+        _currentActiveUI = ui;
     }
 
     public void FromPreparationToMatchScreen()

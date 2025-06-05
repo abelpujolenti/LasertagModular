@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NFC_Test.unity
-    guid: 71c87c0333595bb48b671951b37b1f50
-  - enabled: 1
     path: Assets/Scenes/StartScreen.unity
     guid: 93d0e49feddcf4549bd36af4042f4100
   - enabled: 1

@@ -3,6 +3,7 @@ using Network.Packets;
 using TMPro;
 using UI.Agent;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ServerScreenHandler : MonoBehaviour
@@ -25,6 +26,7 @@ public class ServerScreenHandler : MonoBehaviour
     public MyButton ThreeVS;
     public MyButton FourVS;
     public MyButton FiveVS;
+    public Animator SelectButtonAnimator;
 
     [Header("Character Select")]
     [SerializeField] private List<MyButton> _characterButtons;
@@ -66,16 +68,34 @@ public class ServerScreenHandler : MonoBehaviour
         FourVS.SetListener(() => OnModeSelected(7));
         FiveVS.SetListener(() => OnModeSelected(9));
 
-        for (int i = 0; i < _characterButtons.Count; i++)
+        for (byte i = 0; i < _characterButtons.Count; i++)
         {
-            _characterButtons[i].SetListener(() => OnCharacterSelected((Characters)i + 1));
-            _characterButtons[i].SetText(((Characters)i + 1).ToString());
+            byte fuckCSharp = i;
+            _characterButtons[i].SetListener(() => OnCharacterSelected((Characters)(fuckCSharp + 1)));
+            _characterButtons[i].SetText(((Characters)(i + 1)).ToString());
         }
 
         TeamSelect.SetAction(UpdateCharacterButtons);
 
         CreationSwitch.onClick.AddListener(() => SwitchToList());
         ListSwitch.onClick.AddListener(() => SwitchToCreation());
+    }
+
+    public void BackToInitialSelection()
+    {
+        InitialModeSelection.SetActive(true);
+        NormalModeSettings.SetActive(false);
+    }
+
+    public void BackToServerConnection()
+    {
+        ServerConnectionSetting.SetActive(true);
+        InitialModeSelection.SetActive(false);
+    }
+
+    public void BackToStartScreenScreen()
+    {
+        SceneManager.LoadScene("StartScreen");
     }
 
     public void BlockToggle(bool isTeamB) 
@@ -98,6 +118,7 @@ public class ServerScreenHandler : MonoBehaviour
         foreach (MyButton button in _characterButtons)
         {
             button.SetIsClickable(true);
+            button.Unselect();
         }
 
         if (TeamSelect.GetIsOn())

@@ -8,6 +8,7 @@ using Managers;
 using Network.Packets;
 using Network.Sockets;
 using Stream;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,14 +17,15 @@ namespace Network.NetEntities
     public class Server : MonoBehaviour
     {
         [SerializeField] private ServerActionOutput _serverActionOutput;
-
+        [SerializeField] private WriteNFC _writeNFC;
+        
         private string _ssid;
         private string _password;
         
         private int _portToListen = 3000;
         private SocketManager _serverSocketManager;
         
-        private Func<CardInformation> _onReadCharacter;
+        private Action _onReadCharacter = () => { };
 
         private int _gameId;
 
@@ -32,12 +34,17 @@ namespace Network.NetEntities
         private Characters[] _characterTeamA;
         private Characters[] _characterTeamB;
 
-        private Dictionary<byte, string> _playersName;
-        private Dictionary<byte, bool> _playersTeam;
-        private Dictionary<byte, IBaseAgent> _agents;
-        private Dictionary<byte, byte[]> _agentsChecks;
-        private Dictionary<byte, Characters> _characterPerPlayer;
+        private Dictionary<byte, string> _playersName = new Dictionary<byte, string>();
+        private Dictionary<byte, bool> _playersTeam = new Dictionary<byte, bool>();
+        private Dictionary<byte, IBaseAgent> _agents = new Dictionary<byte, IBaseAgent>();
+        private Dictionary<byte, byte[]> _agentsChecks = new Dictionary<byte, byte[]>();
+        private Dictionary<byte, Characters> _characterPerPlayer = new Dictionary<byte, Characters>();
 
+        private CardWriteInformation _cardWriteBaseInformation = new CardWriteInformation();
+        private CardWriteInformation _cardWriteInformation;
+
+        [SerializeField] private TextMeshProUGUI _text;
+        
         private void Start()
         {
             _serverSocketManager = new SocketManager((socket) =>
@@ -53,25 +60,38 @@ namespace Network.NetEntities
             });
 
             _portToListen = FindAvailablePort(_portToListen);
+
+            _cardWriteBaseInformation.portToListen = _portToListen;
             
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                if (ip.AddressFamily != AddressFamily.InterNetwork)
                 {
-                    if (_serverSocketManager.StartListener(_portToListen))
-                    {
-                        Debug.Log($"Server started on ip {ip.ToString()}, on port {_portToListen})");
-                        
-                        _serverSocketManager.ipEndPoint = new IPEndPoint(ip, _portToListen);
-
-                        _serverSocketManager.StartLoop();
-                        return;
-                    }
+                    continue;
                 }
+                
+                if (!_serverSocketManager.StartListener(_portToListen))
+                {
+                    continue;
+                }
+                
+                Debug.Log($"Server started on ip {ip.ToString()}, on port {_portToListen})");
+                        
+                _serverSocketManager.ipEndPoint = new IPEndPoint(ip, _portToListen);
+
+                _cardWriteBaseInformation.ipAddress = ip.ToString();
+
+                _serverSocketManager.StartLoop();
+                
+                break;
             }
             
             _gameId = Random.Range(0, Int32.MaxValue);
+
+            _cardWriteBaseInformation.gameId = _gameId;
+            
+            _writeNFC.SetCallAction(CallOnReadCharacter);
         }
         
         private int FindAvailablePort(int startPort)
@@ -106,6 +126,10 @@ namespace Network.NetEntities
             _ssid = ssid;
             _password = password;
             _serverActionOutput.ConnectionSettuped();
+
+            //_cardWriteBaseInformation.ipAddress = "192.168.1.130";
+            _cardWriteBaseInformation.wifi = _ssid;
+            _cardWriteBaseInformation.password = _password;
         }
 
         public void SetupMatch(int numberOfPlayers)
@@ -117,36 +141,49 @@ namespace Network.NetEntities
             _serverActionOutput.MatchSetupped();
         }
 
+        private void CallOnReadCharacter()
+        {
+            _onReadCharacter();
+        }
+
         public void PrepareCharacter(Characters character, string name, bool isTeamB)
         {
+            byte newPlayerId;
+
+            do
+            {
+                newPlayerId = (byte)Random.Range(0, Byte.MaxValue);
+
+            } while (_playersId.Contains(newPlayerId));
+            
+            _cardWriteInformation = new CardWriteInformation
+            {
+                ipAddress = _cardWriteBaseInformation.ipAddress,
+                portToListen = _cardWriteBaseInformation.portToListen,
+                isTeamB = Convert.ToByte(isTeamB),
+                gameId = _cardWriteBaseInformation.gameId,
+                playerId = newPlayerId,
+                character = character,
+                wifi = _cardWriteBaseInformation.wifi,
+                password = _cardWriteBaseInformation.password
+            };
+
+            _writeNFC.AddRecord(_cardWriteInformation);
+            
+            _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
+            _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
+            
             _onReadCharacter = () =>
             {
-                byte newPlayerId;
-
-                do
-                {
-                    newPlayerId = (byte)Random.Range(0, Byte.MaxValue);
-
-                } while (_playersId.Contains(newPlayerId));
-            
-                CardInformation cardInformation = new CardInformation
-                {
-                    ipAddress = _serverSocketManager.ipEndPoint.Address.ToString(),
-                    portToListen = _serverSocketManager.ipEndPoint.Port,
-                    gameId = _gameId,
-                    playerId = newPlayerId,
-                    character = character
-                };
-
-                _onReadCharacter = () => new CardInformation();
+                _onReadCharacter = () => {};
                 
                 _playersName.Add(newPlayerId, name);
+                _characterPerPlayer.Add(newPlayerId, character);
+                _agentsChecks.Add(newPlayerId, new byte[CharacterManager.Instance.GetEquipmentAmount(character)]);
                 _playersTeam.Add(newPlayerId, isTeamB);
                 _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
                 
                 _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
-
-                return cardInformation;
             };
         }
 
@@ -192,6 +229,15 @@ namespace Network.NetEntities
             agentCheck[position] = 1;
                 
             _agentsChecks[playerId] = agentCheck;
+
+            string message = "";
+
+            for (int i = 0; i < agentCheck.Length; i++)
+            {
+                message += agentCheck[i] + "";
+            }
+
+            _text.text = message;
                 
             _agents[playerId].CheckState(agentCheck);
 
@@ -288,5 +334,19 @@ namespace Network.NetEntities
                 
             });
         }
+        
+        //DEBUG
+
+        [SerializeField] private int _guarradaCochinosa;
+
+        private void Update()
+        {
+            if (_guarradaCochinosa == 0)
+            {
+                return;
+            }
+        }
+        
+        //
     }
 }

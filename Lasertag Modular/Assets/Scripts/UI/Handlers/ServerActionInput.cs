@@ -1,4 +1,5 @@
 using Network.NetEntities;
+using Network.Packets;
 using UnityEngine;
 
 public class ServerActionInput : MonoBehaviour
@@ -13,13 +14,21 @@ public class ServerActionInput : MonoBehaviour
 
     public void TryApplyGameMode()
     {
-        Server.SetupMatch(ScreenHandler.NormalModeSelected);
+        if (ScreenHandler.NormalModeSelected != 0)
+        {
+            Server.SetupMatch(ScreenHandler.NormalModeSelected);
+            ScreenHandler.SelectButtonAnimator.SetTrigger("Normal");
+        }
     }
 
     public void TryCreatePlayer()
     {
-        Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
-        ScreenHandler.PlayersMatchSettings.SetActive(false);
-        ScreenHandler.WaitingForNFC.SetActive(true);
+        if (ScreenHandler.CurrentCharacterSelected != Characters.NONE && ScreenHandler.PlayerName.text!= "")
+        {
+            Server.PrepareCharacter(ScreenHandler.CurrentCharacterSelected, ScreenHandler.PlayerName.text, ScreenHandler.TeamSelect.GetIsOn());
+            ScreenHandler.PlayersMatchSettings.SetActive(false);
+            ScreenHandler.MatchWaitRoom.SetActive(false);
+            ScreenHandler.WaitingForNFC.SetActive(true);
+        }
     }
 }
