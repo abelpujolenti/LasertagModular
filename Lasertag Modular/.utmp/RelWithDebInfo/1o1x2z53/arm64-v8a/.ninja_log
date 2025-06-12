@@ -1,0 +1,12 @@
+# ninja log v5
+41	357	7707483897883912	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	afaf72f6cced421e
+361	476	7707483899089010	D:/Repos/InputOutput/LasertagModular/Lasertag Modular/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1o1x2z53/obj/arm64-v8a/libswappywrapper.so	ad69d549652d3f25
+15	1031	7707483904576929	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	ba7c3e29be8cc70e
+25	1038	7707483904607194	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	be173aca442e3e47
+35	1051	7707483904803434	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	e2badf46179c2ac6
+0	1053	7707483904843573	GameActivity/CMakeFiles/game.dir/UGAConfiguration.cpp.o	ca2e53c2f4569919
+10	1089	7707483905193209	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	7e2483ffd5ef4082
+30	1090	7707483905213273	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	c50bd8bb7cccb30e
+19	1251	7707483906813987	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	6ccb7ebf120d917b
+6	1321	7707483907481413	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	702daae6885db5ff
+1321	1428	7707483908597118	D:/Repos/InputOutput/LasertagModular/Lasertag Modular/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/1o1x2z53/obj/arm64-v8a/libgame.so	1a71b690c2052ccf
