@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,6 +12,8 @@ public class MyToggle : MonoBehaviour, IPointerClickHandler
     private bool _isClickable = true;
 
     private bool _isOn;
+
+    [SerializeField] private TextMeshProUGUI _text;
 
     public void SetAction(Action action)
     { 

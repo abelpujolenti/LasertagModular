@@ -47,8 +47,6 @@ namespace Network.NetEntities
 
         private byte _teamAPlayers = 0;
         private byte _teamBPlayers = 0;
-
-        [SerializeField] private TextMeshProUGUI _text;
         
         private void Start()
         {
@@ -204,7 +202,7 @@ namespace Network.NetEntities
             SubscribeToSetupWeapon(socket);
             SubscribeToSetupGrenade(socket);
             SubscribeToSetupCar(socket);
-            SubscribeToPlayerReadyToPLay(socket);
+            SubscribeToPlayerReadyToPlay(socket);
         }
 
         private void UnsubscribeToLobbyPacket(TcpSocket socket)
@@ -347,15 +345,13 @@ namespace Network.NetEntities
             });
         }
 
-        private void SubscribeToPlayerReadyToPLay(TcpSocket socket)
+        private void SubscribeToPlayerReadyToPlay(TcpSocket socket)
         {
             socket.Subscribe(PacketKeys.PLAYER_READY_TO_PLAY, (bytes) =>
             {
                 byte playerId = _playersSockets[socket];
                 
                 bool isReady = _playersReadyCheck[playerId];
-
-                _text.text = "RECEIVE";
 
                 _playersReadyCheck[playerId] = !isReady;
 
@@ -372,8 +368,6 @@ namespace Network.NetEntities
 
                         readyPlayersAmount.readyPlayersAmount++;
                     }
-
-                    _text.text = readyPlayersAmount.readyPlayersAmount + "";
                     
                     foreach (TcpSocket socket in sockets)
                     {
@@ -392,19 +386,5 @@ namespace Network.NetEntities
                 
             });
         }
-        
-        //DEBUG
-
-        [SerializeField] private int _guarradaCochinosa;
-
-        private void Update()
-        {
-            if (_guarradaCochinosa == 0)
-            {
-                return;
-            }
-        }
-        
-        //
     }
 }
