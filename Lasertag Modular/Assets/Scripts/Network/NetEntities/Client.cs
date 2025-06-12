@@ -189,8 +189,6 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT, (bytes) =>
             {
                 CheckedPlayersAmount checkedPlayersAmount = bytes.ByteArrayToObjectT<CheckedPlayersAmount>();
-
-                _text.text = checkedPlayersAmount.checkedPlayersAmount + "";
                 
                 _clientActionOutput.UpdateAllPlayers(checkedPlayersAmount.checkedPlayersAmount);
             });
@@ -201,8 +199,6 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.READY_PLAYERS_AMOUNT, (bytes) =>
             {
                 ReadyPlayersAmount readyPlayersAmount = bytes.ByteArrayToObjectT<ReadyPlayersAmount>();
-
-                _text.text = "RECEIVE";
 
                 _clientActionOutput.UpdateConfirmedPlayers(readyPlayersAmount.readyPlayersAmount);
             });
@@ -298,30 +294,5 @@ namespace Network.NetEntities
         {
 
         }
-        
-        //DEBUG
-        [SerializeField] private int _guarradaCochinosa;
-
-        [SerializeField] private TextMeshProUGUI _text;
-        [SerializeField] private string _ip;
-        [SerializeField] private int _port;
-
-        public void Connect()
-        {
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ip), _port));
-        }
-
-        private void Update()
-        {
-            if (_guarradaCochinosa == 0)
-            {
-                return;
-            }
-
-            _guarradaCochinosa = 0;
-
-            _clientActionOutput.PlayerConfirmed(Characters.ENGINEER, "setupResponse.playerName", true);
-        }
-        //
     }
 }

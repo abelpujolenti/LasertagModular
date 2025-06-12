@@ -1,4 +1,5 @@
 using Network.NetEntities;
+using TMPro;
 using UnityEngine;
 
 public class ClientActionInput : MonoBehaviour
@@ -15,7 +16,6 @@ public class ClientActionInput : MonoBehaviour
 
     public void ReadyStateSwaped()
     {
-        bool isReady = ReadySelect.enabled;
-        ReadySelect.SetAction(_client.SendPlayerReadyToPlay);
+        _client.SendPlayerReadyToPlay();
     }
 }
