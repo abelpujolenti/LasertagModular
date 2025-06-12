@@ -34,16 +34,19 @@ namespace Network.NetEntities
         private Characters[] _characterTeamA;
         private Characters[] _characterTeamB;
 
+        private Dictionary<TcpSocket, byte> _playersSockets = new Dictionary<TcpSocket, byte>();
         private Dictionary<byte, string> _playersName = new Dictionary<byte, string>();
         private Dictionary<byte, bool> _playersTeam = new Dictionary<byte, bool>();
         private Dictionary<byte, IBaseAgent> _agents = new Dictionary<byte, IBaseAgent>();
         private Dictionary<byte, byte[]> _agentsChecks = new Dictionary<byte, byte[]>();
         private Dictionary<byte, Characters> _characterPerPlayer = new Dictionary<byte, Characters>();
+        private Dictionary<byte, bool> _playersReadyCheck = new Dictionary<byte, bool>();
 
         private CardWriteInformation _cardWriteBaseInformation = new CardWriteInformation();
         private CardWriteInformation _cardWriteInformation;
 
-        [SerializeField] private TextMeshProUGUI _text;
+        private byte _teamAPlayers = 0;
+        private byte _teamBPlayers = 0;
         
         private void Start()
         {
@@ -127,7 +130,6 @@ namespace Network.NetEntities
             _password = password;
             _serverActionOutput.ConnectionSettuped();
 
-            //_cardWriteBaseInformation.ipAddress = "192.168.1.130";
             _cardWriteBaseInformation.wifi = _ssid;
             _cardWriteBaseInformation.password = _password;
         }
@@ -170,9 +172,6 @@ namespace Network.NetEntities
 
             _writeNFC.AddRecord(_cardWriteInformation);
             
-            _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
-            _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
-            
             _onReadCharacter = () =>
             {
                 _onReadCharacter = () => {};
@@ -182,6 +181,15 @@ namespace Network.NetEntities
                 _agentsChecks.Add(newPlayerId, new byte[CharacterManager.Instance.GetEquipmentAmount(character)]);
                 _playersTeam.Add(newPlayerId, isTeamB);
                 _agents.Add(newPlayerId, _serverActionOutput.SetAgent(character, name, isTeamB));
+
+                if (!isTeamB)
+                {
+                    _characterTeamA[_teamAPlayers++] = character;
+                }
+                else
+                {
+                    _characterTeamB[_teamBPlayers++] = character;   
+                }
                 
                 _serverActionOutput.UpdatePlayerMatchSettings(_characterTeamA, _characterTeamB);
             };
@@ -194,6 +202,7 @@ namespace Network.NetEntities
             SubscribeToSetupWeapon(socket);
             SubscribeToSetupGrenade(socket);
             SubscribeToSetupCar(socket);
+            SubscribeToPlayerReadyToPlay(socket);
         }
 
         private void UnsubscribeToLobbyPacket(TcpSocket socket)
@@ -229,15 +238,6 @@ namespace Network.NetEntities
             agentCheck[position] = 1;
                 
             _agentsChecks[playerId] = agentCheck;
-
-            string message = "";
-
-            for (int i = 0; i < agentCheck.Length; i++)
-            {
-                message += agentCheck[i] + "";
-            }
-
-            _text.text = message;
                 
             _agents[playerId].CheckState(agentCheck);
 
@@ -250,6 +250,9 @@ namespace Network.NetEntities
             {
                 SetupMobile setupMobile = bytes.ByteArrayToObjectT<SetupMobile>();
                 
+                _playersSockets.Add(socket, setupMobile.playerId);
+                _playersReadyCheck.Add(setupMobile.playerId, false);
+                
                 SetupCharacterResponse setupResponse = new SetupCharacterResponse
                 {
                     character = setupMobile.character,
@@ -259,6 +262,21 @@ namespace Network.NetEntities
                 };
                 
                 socket.SendPacket(PacketKeys.SETUP_CHARACTER_RESPONSE, setupResponse);
+
+                Action<List<TcpSocket>> action = (sockets) =>
+                {
+                    CheckedPlayersAmount checkedPlayersAmount = new CheckedPlayersAmount
+                    {
+                        checkedPlayersAmount = (byte)_playersReadyCheck.Count
+                    };
+                    
+                    foreach (TcpSocket socket in sockets)
+                    {
+                        socket.SendPacket(PacketKeys.CHECKED_PLAYERS_AMOUNT, checkedPlayersAmount);
+                    }
+                };
+
+                _serverSocketManager.GetSocketsAsync(action);
             });
         }
 
@@ -327,6 +345,40 @@ namespace Network.NetEntities
             });
         }
 
+        private void SubscribeToPlayerReadyToPlay(TcpSocket socket)
+        {
+            socket.Subscribe(PacketKeys.PLAYER_READY_TO_PLAY, (bytes) =>
+            {
+                byte playerId = _playersSockets[socket];
+                
+                bool isReady = _playersReadyCheck[playerId];
+
+                _playersReadyCheck[playerId] = !isReady;
+
+                Action<List<TcpSocket>> action = (sockets) =>
+                {
+                    ReadyPlayersAmount readyPlayersAmount = new ReadyPlayersAmount();
+
+                    foreach (bool isChecked in _playersReadyCheck.Values)
+                    {
+                        if (!isChecked)
+                        {
+                            continue;
+                        }
+
+                        readyPlayersAmount.readyPlayersAmount++;
+                    }
+                    
+                    foreach (TcpSocket socket in sockets)
+                    {
+                        socket.SendPacket(PacketKeys.READY_PLAYERS_AMOUNT, readyPlayersAmount);
+                    }
+                };
+
+                _serverSocketManager.GetSocketsAsync(action);
+            });
+        }
+
         private void SubscribeToHit(TcpSocket socket)
         {
             socket.Subscribe(PacketKeys.HIT, (bytes) =>
@@ -334,19 +386,5 @@ namespace Network.NetEntities
                 
             });
         }
-        
-        //DEBUG
-
-        [SerializeField] private int _guarradaCochinosa;
-
-        private void Update()
-        {
-            if (_guarradaCochinosa == 0)
-            {
-                return;
-            }
-        }
-        
-        //
     }
 }

@@ -33,6 +33,8 @@ public class ClientScreenHandler : MonoBehaviour
 
     private void Start()
     {
+        PlayersSetting.SetActive(false);
+        InGameUI.SetActive(false);
         _currentActiveUI = WaitingForNFC;
         _currentActiveUI.SetActive(true);
     }

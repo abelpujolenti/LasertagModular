@@ -36,29 +36,22 @@ namespace UI.Agent
         {
             Name.text = name;
             Character.text = character;
-            TeamBack.color = (team ? "#E16C80" : "#837DC9").ToUnityColor();
+            TeamBack.color = (team ? "#837DC9" : "#E16C80").ToUnityColor();
         }
 
         public void Initiliaze()
         {
-            message = "Start";
             mobileCell = CreateImage();
-            message = "Mobile";
             mobileCell.SetImage(_mobilePath);
             AddImageToGrid(mobileCell.gameObject);
-            message = "Mobile To Grid";
 
             gunCell = CreateImage();
-            message = "Gun";
             gunCell.SetImage(_gunPath);
             AddImageToGrid(gunCell.gameObject);
-            message = "Gun To Grid";
 
             vestCell = CreateImage();
-            message = "Vest";
             vestCell.SetImage(_vestPath);
             AddImageToGrid(vestCell.gameObject);
-            message = "Vest To Grid";
         }
 
         public void IncrementCounter()
@@ -78,38 +71,10 @@ namespace UI.Agent
             cellGameObject.transform.SetParent(_gridLayout.transform);
         }
 
-        private string message = "Bitch";
-
         public void CheckState(byte[] checkState)
         {
-            if (!mobileCell)
-            {
-                Character.text = message;
-            }
-            else
-            {
-                Character.text = mobileCounter + "";
-            }
             mobileCell.ToggleCheck(checkState[mobileCounter] == 1);
-            
-            if (!gunCell)
-            {
-                Character.text = "gunCell null";
-            }
-            else
-            {
-                Character.text = gunCounter + "";
-            }
             gunCell.ToggleCheck(checkState[gunCounter] == 1);
-            
-            if (!vestCell)
-            {
-                Character.text = "VEst null";
-            }
-            else
-            {
-                Character.text = vestCounter + "";
-            }
             vestCell.ToggleCheck(checkState[vestCounter] == 1);
         }
     }

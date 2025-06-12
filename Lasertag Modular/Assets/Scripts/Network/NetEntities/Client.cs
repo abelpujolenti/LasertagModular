@@ -89,6 +89,11 @@ namespace Network.NetEntities
             _socketWithServer.SendPacket(PacketKeys.SETUP_MOBILE, setupMobile);
         }
 
+        public void SendPlayerReadyToPlay()
+        {
+            _socketWithServer.SendPacket(PacketKeys.PLAYER_READY_TO_PLAY);
+        }
+
         private void SubscribeToLobbyPackets()
         {
             SubscribeToSetupCharacterResponse();
@@ -156,16 +161,7 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.SETUP_CHARACTER_RESPONSE, (bytes) =>
             {
                 SetupCharacterResponse setupResponse = bytes.ByteArrayToObjectT<SetupCharacterResponse>();
-
-                _text.text = "RECEIVED";
-
-                _text.text = (int)setupResponse.character + "";
-
-                _text.text = setupResponse.playerName;
-
-                _text.text = setupResponse.isTeamB ? "True" : "False";
-
-                //_clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
+                
                 _agent = _clientActionOutput.PlayerConfirmed(setupResponse.character, setupResponse.playerName, setupResponse.isTeamB);
             });
         }
@@ -193,8 +189,8 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.CHECKED_PLAYERS_AMOUNT, (bytes) =>
             {
                 CheckedPlayersAmount checkedPlayersAmount = bytes.ByteArrayToObjectT<CheckedPlayersAmount>();
-
-                _clientActionOutput.UpdateConfirmedPlayers(checkedPlayersAmount.checkedPlayersAmount);
+                
+                _clientActionOutput.UpdateAllPlayers(checkedPlayersAmount.checkedPlayersAmount);
             });
         }
 
@@ -203,8 +199,8 @@ namespace Network.NetEntities
             _socketWithServer.Subscribe(PacketKeys.READY_PLAYERS_AMOUNT, (bytes) =>
             {
                 ReadyPlayersAmount readyPlayersAmount = bytes.ByteArrayToObjectT<ReadyPlayersAmount>();
-                
-                _clientActionOutput.UpdateAllPlayers(readyPlayersAmount.readyPlayersAmount);
+
+                _clientActionOutput.UpdateConfirmedPlayers(readyPlayersAmount.readyPlayersAmount);
             });
         }
 
@@ -298,30 +294,5 @@ namespace Network.NetEntities
         {
 
         }
-        
-        //DEBUG
-        [SerializeField] private int _guarradaCochinosa;
-
-        [SerializeField] private TextMeshProUGUI _text;
-        [SerializeField] private string _ip;
-        [SerializeField] private int _port;
-
-        public void Connect()
-        {
-            ConnectToServer(new IPEndPoint(IPAddress.Parse(_ip), _port));
-        }
-
-        private void Update()
-        {
-            if (_guarradaCochinosa == 0)
-            {
-                return;
-            }
-
-            _guarradaCochinosa = 0;
-
-            _clientActionOutput.PlayerConfirmed(Characters.ENGINEER, "setupResponse.playerName", true);
-        }
-        //
     }
 }
